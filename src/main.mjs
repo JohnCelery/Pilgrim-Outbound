@@ -1,22 +1,26 @@
 import { createRng } from './engine/rng.js';
 import { createWorld } from './engine/ecs.js';
 import { createLoop } from './engine/loop.js';
+import { createRenderer, drawMap } from './engine/renderer.js';
+import { loadMap } from './engine/mapLoader.js';
 
 function boot() {
+  const canvas = document.getElementById('game');
+  canvas.width = 800;
+  canvas.height = 600;
+
   const rng = createRng();
   const world = createWorld();
+  const renderer = createRenderer(canvas);
   const loop = createLoop(step);
 
-  let elapsed = 0;
-  let logTimer = 0;
+  let mapData = null;
 
-  function step(dt) {
-    elapsed += dt;
-    logTimer += dt;
-    if (logTimer >= 1000) {
-      logTimer -= 1000;
-      console.log(`${Math.round(elapsed)}ms`, rng.nextInt());
-    }
+  loadMap(world).then(map => { mapData = map; });
+
+  function step(_dt) {
+    renderer.clear();
+    drawMap(renderer.ctx, mapData);
   }
 
   loop.start();
