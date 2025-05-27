@@ -5,14 +5,27 @@ import { createRenderer, drawMap } from './engine/renderer.js';
 import { loadMap } from './engine/mapLoader.js';
 import { createMapUI } from './ui/mapUI.js';
 import { runEncounter } from './ui/encounter.js';
+import { createDiary } from './ui/diary.js';
 import { createInventory } from './ui/inventory.js';
 import {
   POSITION,
   PROVISIONS,
   WATER,
+  GEAR,
+  IRON,
+  SILVER,
+  WOOD,
+  FORTUNE,
+  FLAGS,
   addPosition,
   addProvisions,
-  addWater
+  addWater,
+  addGear,
+  addIron,
+  addSilver,
+  addWood,
+  addFortune,
+  addFlags
 } from './components.js';
 import { createHud } from './ui/hud.js';
 
@@ -39,10 +52,17 @@ function boot() {
   addPosition(world, player, 0, 0);
   addProvisions(world, player, 10);
   addWater(world, player, 10);
+  addGear(world, player, 10);
+  addIron(world, player, 0);
+  addSilver(world, player, 0);
+  addWood(world, player, 0);
+  addFortune(world, player, 0);
+  addFlags(world, player);
   hud = createHud(world, player);
   inventory = createInventory();
+  const diary = createDiary();
 
-  fetch('data/events.json')
+  fetch('data/encounters.json')
     .then(r => r.json())
     .then(json => {
       eventsData = json;
@@ -96,10 +116,33 @@ function boot() {
       mapData.visited = visitedWaypoints;
     }
 
-    // Possibly trigger a random encounter
+    // Possibly trigger 0-2 random encounters with weighted pick
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
-      const idx = Math.floor(rng.nextFloat() * eventsData.encounters.length);
-      runEncounter(world, player, eventsData.encounters[idx], checkGameOver);
+      const draws = Math.floor(rng.nextFloat() * 3); // 0,1,2
+      const queue = [];
+      const available = eventsData.encounters.filter(e => {
+        if (e.once && e._used) return false;
+        return true;
+      });
+      for (let i = 0; i < draws && available.length; i++) {
+        const total = available.reduce((s, ev) => s + (ev.weight || 1), 0);
+        let roll = rng.nextFloat() * total;
+        let pickedIndex = 0;
+        for (let j = 0; j < available.length; j++) {
+          roll -= available[j].weight || 1;
+          if (roll <= 0) { pickedIndex = j; break; }
+        }
+        const ev = available.splice(pickedIndex, 1)[0];
+        ev._used = ev.once ? true : ev._used;
+        queue.push(ev);
+      }
+
+      const next = () => {
+        if (!queue.length) { checkGameOver(); return; }
+        const ev = queue.shift();
+        runEncounter(world, player, ev, diary.add, next);
+      };
+      if (queue.length) next();
     }
 
     if (mapUI) mapUI.update();
