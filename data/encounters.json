@@ -638,6 +638,34 @@
           }
         }
       ]
+    },
+    {
+      "id": "hermit_water_barter",
+      "weight": 5,
+      "text": "A sun-leaned hermit emerges from a rocky hollow, offering cool jars of water to travellers willing to trade spare gear.",
+      "options": [
+        {
+          "option": "Trade some gear for water",
+          "outcome": {
+            "resources": {"water": 15, "gear": -10},
+            "diary": "The hermit blesses your path."
+          }
+        },
+        {
+          "option": "Thank him and decline",
+          "outcome": {
+            "diary": "He nods, drinking deeply from one jar."
+          }
+        },
+        {
+          "option": "Steal a jar while he prays",
+          "outcome": {
+            "resources": {"water": 5, "fortune": -1},
+            "setFlags": ["hermit_resentful"],
+            "diary": "You flee with water as the hermit curses."
+          }
+        }
+      ]
     }
   ]
 }
