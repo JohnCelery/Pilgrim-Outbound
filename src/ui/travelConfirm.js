@@ -1,10 +1,9 @@
 export function createTravelConfirm() {
   const panel = document.createElement('div');
   panel.style.position = 'absolute';
-  panel.style.left = '50%';
-  panel.style.top = '50%';
-  panel.style.transform = 'translate(-50%, -50%)';
-  panel.style.background = 'rgba(0, 0, 0, 0.85)';
+  panel.style.right = '10px';
+  panel.style.bottom = '10px';
+  panel.style.background = "url('PASTE_URL_HERE') no-repeat center/contain";
   panel.style.color = '#fff';
   panel.style.padding = '8px';
   panel.style.border = '2px solid #d7a13b';
@@ -34,10 +33,12 @@ export function createTravelConfirm() {
   document.body.appendChild(panel);
 
   let confirmFn = null;
+  let cancelFn = null;
 
   function hide() {
     panel.style.display = 'none';
     confirmFn = null;
+    cancelFn = null;
   }
 
   confirmBtn.addEventListener('click', () => {
@@ -46,13 +47,14 @@ export function createTravelConfirm() {
     if (fn) fn();
   });
 
-  cancelBtn.addEventListener('click', hide);
+  cancelBtn.addEventListener('click', () => { hide(); if (cancelFn) cancelFn(); });
 
-  function show(wp, onConfirm) {
+  function show(wp, costs, onConfirm, onCancel, enabled = true) {
     nameEl.textContent = wp.name;
-    const costs = wp.travelCosts || { food: 0, water: 0 };
     costEl.textContent = `Food ${costs.food || 0}, Water ${costs.water || 0}`;
     confirmFn = onConfirm;
+    cancelFn = onCancel;
+    confirmBtn.disabled = !enabled;
     panel.style.display = 'block';
   }
 

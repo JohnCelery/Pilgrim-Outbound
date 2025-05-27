@@ -13,6 +13,7 @@ import { createTitleScreen } from './ui/titleScreen.js';
 import { createResourceMenu } from './ui/resourceMenu.js';
 import { createHarvestMenu } from './ui/harvestMenu.js';
 import { createTravelConfirm } from './ui/travelConfirm.js';
+import { createDeathScreen } from './ui/deathScreen.js';
 
 import {
   POSITION,
@@ -94,6 +95,8 @@ function startGame(seedStr = '') {
   let resources = null;
   let harvest = null;
   let travelConfirm = null;
+  let deathScreen = null;
+  let markerTween = null;
   let gameOver = false;
 
   const player = world.createEntity();
@@ -145,6 +148,27 @@ function startGame(seedStr = '') {
       eventsData = json;
     });
 
+  function calculateTravelCost(wp) {
+    const startWp = mapData.waypoints.find(w => w.name === currentWaypoint);
+    const flagRes = world.query(FLAGS).find(r => r.id === player);
+    const flags = flagRes ? flagRes.comps[0] : {};
+    let food = wp.travelCosts?.food || 0;
+    let water = wp.travelCosts?.water || 0;
+    if (flags.dog_companion) food = Math.max(0, food - 1);
+    if (flags.marsh_curse) water += 1;
+    const coastalHop = (startWp?.tags || []).includes('coastal') || (wp.tags || []).includes('coastal');
+    if (flags.silk_sail && coastalHop) food = Math.max(0, food - 1);
+    return { food, water };
+  }
+
+  function canAfford(costs) {
+    const provRes = world.query(PROVISIONS).find(r => r.id === player);
+    const waterRes = world.query(WATER).find(r => r.id === player);
+    const prov = provRes ? provRes.comps[0].amount : 0;
+    const wat = waterRes ? waterRes.comps[0].amount : 0;
+    return prov - costs.food >= 0 && wat - costs.water >= 0;
+  }
+
   function checkGameOver() {
     const provRes = world.query(PROVISIONS).find(r => r.id === player);
     const waterRes = world.query(WATER).find(r => r.id === player);
@@ -152,38 +176,49 @@ function startGame(seedStr = '') {
     const wat = waterRes ? waterRes.comps[0].amount : 0;
     if ((prov <= 0 || wat <= 0) && !gameOver) {
       gameOver = true;
-      alert('You have collapsed from exhaustion. Game over.');
       if (mapUI) mapUI.disable();
+      if (!deathScreen) deathScreen = createDeathScreen(() => location.reload());
     }
   }
 
-  function performTravel(wp) {
+  function performTravel(wp, costs) {
     console.log('Traveling to', wp.name);
 
     if (harvest) harvest.hide();
 
-    // Spend provisions and water according to travel costs
-    const costs = wp.travelCosts || { food: 0, water: 0 };
+    if (!costs) costs = calculateTravelCost(wp);
+
+    diary.add(`Day ${state.day} — Departed ${currentWaypoint}.`);
 
     const provRes = world.query(PROVISIONS).find(r => r.id === player);
     if (provRes) {
       const prov = provRes.comps[0];
-      prov.amount = Math.max(0, prov.amount - (costs.food || 0));
+      prov.amount = Math.max(0, prov.amount - costs.food);
     }
 
     const waterRes = world.query(WATER).find(r => r.id === player);
     if (waterRes) {
       const wat = waterRes.comps[0];
-      wat.amount = Math.max(0, wat.amount - (costs.water || 0));
+      wat.amount = Math.max(0, wat.amount - costs.water);
     }
 
-    // Update player position
+    const provLeft = provRes ? provRes.comps[0].amount : 0;
+    const waterLeft = waterRes ? waterRes.comps[0].amount : 0;
+    if (provLeft <= 0 || waterLeft <= 0) {
+      checkGameOver();
+      if (gameOver) return;
+    }
+
+    state.day += 1;
+
     const posRes = world.query(POSITION).find(r => r.id === player);
     if (posRes) {
       const pos = posRes.comps[0];
+      const startPos = { x: pos.x, y: pos.y };
       const [x, y] = wp.coords;
       pos.x = x;
       pos.y = y;
+      markerTween = { start: startPos, end: { x, y }, t: 0, dur: 500 };
     }
 
     if (wp.name === 'Rome') {
@@ -248,12 +283,15 @@ function startGame(seedStr = '') {
     }
 
     if (mapUI) mapUI.update();
+    diary.add(`Day ${state.day} — Arrived at ${wp.name}.`);
     checkGameOver();
   }
 
   function travelTo(wp) {
-    if (travelConfirm) travelConfirm.show(wp, () => performTravel(wp));
-    else performTravel(wp);
+    const costs = calculateTravelCost(wp);
+    const afford = canAfford(costs);
+    if (travelConfirm) travelConfirm.show(wp, costs, () => { if (mapUI) mapUI.clearSelection(); performTravel(wp, costs); }, () => mapUI && mapUI.clearSelection(), afford);
+    else performTravel(wp, costs);
   }
 
   loadMap(world).then(map => {
@@ -270,7 +308,7 @@ function startGame(seedStr = '') {
         mapData.visited = visitedWaypoints;
       }
     }
-    mapUI = createMapUI(canvas, mapData, world, player, travelTo);
+    mapUI = createMapUI(canvas, mapData, world, player, travelTo, calculateTravelCost);
     // Initially disable, then enable once loaded or after title screen
     mapUI.disable();
     mapUI.update();
@@ -278,11 +316,18 @@ function startGame(seedStr = '') {
     diary.add(`Day 1 — Set forth from ${currentWaypoint}.`);
   });
 
-  function step(_dt) {
+  function step(dt) {
     renderer.clear();
     const posRes = world.query(POSITION).find(r => r.id === player);
     const pos = posRes ? posRes.comps[0] : null;
-    drawMap(renderer.ctx, mapData, pos);
+    if (markerTween) {
+      markerTween.t += dt;
+      if (markerTween.t >= markerTween.dur) {
+        markerTween = null;
+      }
+    }
+    const tweenData = markerTween ? { start: markerTween.start, end: markerTween.end, progress: markerTween.t / markerTween.dur } : null;
+    drawMap(renderer.ctx, mapData, pos, tweenData);
     hud.draw(renderer.ctx);
     if (resources) resources.update();
   }

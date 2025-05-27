@@ -24,7 +24,7 @@ let markerImg;
 let shadowImg;
 let worldMapImg;
 
-export function drawMap(ctx, map, playerPos = null) {
+export function drawMap(ctx, map, playerPos = null, tween = null) {
   if (!waypointImg) {
     waypointImg = new Image();
     waypointImg.src = waypointUrl;
@@ -74,8 +74,14 @@ export function drawMap(ctx, map, playerPos = null) {
   }
 
   if (playerPos) {
-    const baseX = ctx.canvas.width / 2 + playerPos.x * 64 - 32;
-    const baseY = ctx.canvas.height / 2 + playerPos.y * 64 - 32;
+    let px = playerPos.x;
+    let py = playerPos.y;
+    if (tween) {
+      px = tween.start.x + (tween.end.x - tween.start.x) * tween.progress;
+      py = tween.start.y + (tween.end.y - tween.start.y) * tween.progress;
+    }
+    const baseX = ctx.canvas.width / 2 + px * 64 - 32;
+    const baseY = ctx.canvas.height / 2 + py * 64 - 32;
     ctx.drawImage(shadowImg, baseX + 32 - 8, baseY + 48, 16, 16);
     ctx.drawImage(markerImg, baseX + 8, baseY + 8, 48, 48);
   }
