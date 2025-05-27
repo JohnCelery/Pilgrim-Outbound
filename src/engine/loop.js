@@ -1,12 +1,17 @@
 export function createLoop(step) {
+  const STEP = 1000 / 60; // ms per update
   let last = 0;
+  let acc = 0;
   let running = false;
 
   function frame(t) {
     if (!running) return;
-    const dt = (t - last) / 1000;
+    acc += t - last;
     last = t;
-    step(dt);
+    while (acc >= STEP) {
+      step(STEP);
+      acc -= STEP;
+    }
     requestAnimationFrame(frame);
   }
 
@@ -14,7 +19,7 @@ export function createLoop(step) {
     start() {
       if (!running) {
         running = true;
-        requestAnimationFrame(t => { last = t; frame(t); });
+        requestAnimationFrame(time => { last = time; frame(time); });
       }
     },
     stop() { running = false; }
