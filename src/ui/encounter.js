@@ -1,4 +1,6 @@
 export function showEncounter(data) {
-  // TODO: modal encounter panel
-  console.log('Encounter:', data);
+  if (!data) return;
+  // Basic modal using alert for now
+  const message = `${data.title}\n\n${data.text}`;
+  alert(message);
 }
