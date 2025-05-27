@@ -1,3 +1,5 @@
+import { PROVISIONS, WATER } from '../components.js';
+
 let panel;
 
 export function showEncounter(data) {
@@ -5,8 +7,22 @@ export function showEncounter(data) {
   console.log('Encounter:', data);
 }
 
-export function runEncounter(data) {
+export function runEncounter(world, playerId, data, onComplete) {
   if (panel) panel.remove();
+
+  function applyCost(cost) {
+    for (const [key, val] of Object.entries(cost)) {
+      let type = null;
+      if (key === 'food') type = PROVISIONS;
+      else if (key === 'water') type = WATER;
+      if (!type) continue;
+      const res = world.query(type).find(r => r.id === playerId);
+      if (res) {
+        const comp = res.comps[0];
+        comp.amount = Math.max(0, comp.amount - val);
+      }
+    }
+  }
 
   panel = document.createElement('div');
   panel.style.position = 'absolute';
@@ -45,7 +61,9 @@ export function runEncounter(data) {
     btn.textContent = choice.option || choice;
     btn.style.marginRight = '6px';
     btn.addEventListener('click', () => {
+      applyCost(choice.cost || {});
       panel.remove();
+      if (onComplete) onComplete();
     });
     choices.appendChild(btn);
   });
