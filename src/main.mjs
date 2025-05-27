@@ -7,6 +7,7 @@ import { createMapUI } from './ui/mapUI.js';
 import { runEncounter } from './ui/encounter.js';
 import { createDiary } from './ui/diary.js';
 import { createInventory } from './ui/inventory.js';
+import { createTitleScreen } from './ui/titleScreen.js';
 import {
   POSITION,
   PROVISIONS,
@@ -29,7 +30,7 @@ import {
 } from './components.js';
 import { createHud } from './ui/hud.js';
 
-function boot() {
+function startGame() {
   const canvas = document.getElementById('game');
   canvas.width = 800;
   canvas.height = 600;
@@ -165,7 +166,9 @@ function boot() {
       }
     }
     mapUI = createMapUI(canvas, mapData, world, player, travelTo);
+    mapUI.disable();
     mapUI.update();
+    mapUI.enable();
   });
 
   function step(_dt) {
@@ -177,6 +180,10 @@ function boot() {
   }
 
   loop.start();
+}
+
+function boot() {
+  createTitleScreen(startGame);
 }
 
 window.addEventListener('DOMContentLoaded', boot);
