@@ -42,8 +42,12 @@ export function runEncounter(world, playerId, data, diaryFn, onComplete) {
     if (!outcome) return;
     if (outcome.random) {
       const roll = Math.random();
-      if (roll < outcome.random.chance) applyOutcome(outcome.random.success);
-      else applyOutcome(outcome.random.fail);
+      if (roll < outcome.random.chance) {
+        applyOutcome({ ...outcome.random.success, diaryFn: outcome.diaryFn });
+      }
+      else {
+        applyOutcome({ ...outcome.random.fail, diaryFn: outcome.diaryFn });
+      }
       return;
     }
     for (const [k, v] of Object.entries(outcome.resources || {})) {
