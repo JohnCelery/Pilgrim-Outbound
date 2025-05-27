@@ -1,4 +1,4 @@
-export function createDeathScreen(onRestart) {
+export function createDeathScreen(message = 'You have perished.', onRestart) {
   const overlay = document.createElement('div');
   overlay.style.position = 'absolute';
   overlay.style.left = '0';
@@ -11,6 +11,12 @@ export function createDeathScreen(onRestart) {
   overlay.style.justifyContent = 'center';
   overlay.style.alignItems = 'center';
   overlay.style.zIndex = '10000';
+
+  const msg = document.createElement('p');
+  msg.textContent = message;
+  msg.style.color = '#fff';
+  msg.style.marginBottom = '16px';
+  overlay.appendChild(msg);
 
   const btn = document.createElement('button');
   btn.textContent = 'Restart';

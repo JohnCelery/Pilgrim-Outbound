@@ -27,6 +27,58 @@ export function createInventory(starterItems = []) {
   let offsetX = 0;
   let offsetY = 0;
 
+  function ensureCell() {
+    let cell = cells.find(c => c.children.length === 0);
+    if (!cell) {
+      cell = document.createElement('div');
+      cell.style.width = '64px';
+      cell.style.height = '64px';
+      cell.style.border = '1px solid #555';
+      cell.style.boxSizing = 'border-box';
+      cell.style.position = 'relative';
+      container.appendChild(cell);
+      cells.push(cell);
+      const rows = Math.ceil(cells.length / 6);
+      container.style.gridTemplateRows = `repeat(${rows}, 64px)`;
+    }
+    return cell;
+  }
+
+  function makeItemElement(item) {
+    const img = new Image();
+    img.src = 'PASTE_URL_HERE';
+    img.style.width = '48px';
+    img.style.height = '48px';
+    img.style.position = 'absolute';
+    img.style.left = '8px';
+    img.style.top = '8px';
+    img.dataset.item = item;
+    img.addEventListener('mousedown', ev => {
+      dragging = img;
+      offsetX = ev.offsetX + 8;
+      offsetY = ev.offsetY + 8;
+      img.style.pointerEvents = 'none';
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('mouseup', onDrop);
+    });
+    return img;
+  }
+
+  function addItem(item) {
+    const cell = ensureCell();
+    const img = makeItemElement(item);
+    cell.appendChild(img);
+    return true;
+  }
+
+  function removeItem(item) {
+    for (const cell of cells) {
+      const img = Array.from(cell.children).find(el => el.dataset.item === item);
+      if (img) { img.remove(); return true; }
+    }
+    return false;
+  }
+
   function onDrag(ev) {
     if (!dragging) return;
     dragging.style.left = ev.pageX - offsetX + 'px';
@@ -57,26 +109,7 @@ export function createInventory(starterItems = []) {
 
 
   // populate starter items if provided
-  starterItems.forEach((item, idx) => {
-    const cell = cells[idx];
-    if (!cell) return;
-    const img = new Image();
-    img.src = 'PASTE_URL_HERE';
-    img.style.width = '48px';
-    img.style.height = '48px';
-    img.style.position = 'absolute';
-    img.style.left = '8px';
-    img.style.top = '8px';
-    img.addEventListener('mousedown', ev => {
-      dragging = img;
-      offsetX = ev.offsetX + 8;
-      offsetY = ev.offsetY + 8;
-      img.style.pointerEvents = 'none';
-      document.addEventListener('mousemove', onDrag);
-      document.addEventListener('mouseup', onDrop);
-    });
-    cell.appendChild(img);
-  });
+  starterItems.forEach(it => addItem(it));
 
   function show() {
     container.style.display = 'grid';
@@ -96,6 +129,8 @@ export function createInventory(starterItems = []) {
     show,
     hide,
     toggle,
+    addItem,
+    removeItem,
     destroy() {
       container.remove();
     }

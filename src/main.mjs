@@ -177,7 +177,7 @@ function startGame(seedStr = '') {
     if ((prov <= 0 || wat <= 0) && !gameOver) {
       gameOver = true;
       if (mapUI) mapUI.disable();
-      if (!deathScreen) deathScreen = createDeathScreen(() => location.reload());
+      if (!deathScreen) deathScreen = createDeathScreen('You have perished.', () => location.reload());
     }
   }
 
@@ -274,7 +274,7 @@ function startGame(seedStr = '') {
         return;
       }
       const ev = queue.shift();
-      runEncounter(world, player, ev, diary.add, next);
+      runEncounter(world, player, ev, diary.add, inventory, state, next);
     };
     if (queue.length) next();
     else {
