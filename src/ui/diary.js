@@ -1,16 +1,34 @@
-export function createDiary() {
+export function createDiary(state = null) {
+  const panel = document.createElement('div');
+  panel.id = 'diary';
+  panel.style.position = 'absolute';
+  panel.style.right = '0';
+  panel.style.top = '0';
+  panel.style.width = '250px';
+  panel.style.height = '100%';
+  panel.style.backgroundImage = "url('PASTE_URL_HERE')";
+  panel.style.backgroundSize = 'cover';
+  panel.style.transform = 'translateX(100%)';
+  panel.style.transition = 'transform 0.3s ease-out';
+  panel.style.overflow = 'hidden';
+  panel.style.display = 'flex';
+  panel.style.flexDirection = 'column';
+
   const log = document.createElement('div');
-  log.id = 'diary';
-  log.style.position = 'absolute';
-  log.style.left = '0';
-  log.style.bottom = '0';
-  log.style.width = '100%';
-  log.style.maxHeight = '150px';
+  log.style.flex = '1';
   log.style.overflowY = 'auto';
-  log.style.background = 'rgba(244,241,233,0.85)';
+  log.style.padding = '8px';
   log.style.font = '14px sans-serif';
-  log.style.padding = '4px';
-  document.body.appendChild(log);
+  panel.appendChild(log);
+
+  document.body.appendChild(panel);
+
+  function slideIn() {
+    panel.style.transform = 'translateX(0)';
+    setTimeout(() => {
+      panel.style.transform = 'translateX(100%)';
+    }, 2000);
+  }
 
   return {
     add(line) {
@@ -18,8 +36,12 @@ export function createDiary() {
       p.textContent = line;
       log.appendChild(p);
       log.scrollTop = log.scrollHeight;
+      slideIn();
+      if (state && Array.isArray(state.diary)) {
+        state.diary.push(line);
+      }
     },
-    element: log,
-    destroy() { log.remove(); }
+    element: panel,
+    destroy() { panel.remove(); }
   };
 }

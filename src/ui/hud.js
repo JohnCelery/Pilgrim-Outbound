@@ -4,10 +4,8 @@ import { PROVISIONS, WATER, GEAR, FORTUNE } from '../components.js';
 const healthIcon = '❤';
 const staminaIcon = '⚡';
 
-const foodUrl =
-  'https://cdn.glitch.global/813b10b4-5e9c-4e7c-9356-9c7f504e5ff1/grain_sack_1x1.png';
-const waterUrl =
-  'https://cdn.glitch.global/813b10b4-5e9c-4e7c-9356-9c7f504e5ff1/water_drop.png';
+const foodUrl = 'PASTE_URL_HERE';
+const waterUrl = 'PASTE_URL_HERE';
 
 let foodImg;
 let waterImg;
