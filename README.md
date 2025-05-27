@@ -1,12 +1,12 @@
 # Pilgrim Outbound  
-*A zero-dependency browser roguelike set in 9ᵗʰ-century Europe*
+*A zero-dependency browser roguelike set in a mythic age*
 
 
 ---
 
 ## Setting  
-AD 879.  Charlemagne’s empire has splintered, Viking longships menace every coast, and rumors of a coming plague drift on the trade winds.  
-You are a battered royal courier who wakes in the aftermath of a raid, hundreds of leagues from home, holding a relic that could decide the fate of a kingdom.  With only a weary mount, a torn map, and a half-empty saddlebag, you must thread the fractured realms of Christendom, the pagan North, and the Muslim frontier to deliver your charge—or die unknown along the road.
+A great empire has splintered, sea raiders menace every coast, and rumors of plague drift on the trade winds.
+You are a battered royal courier who wakes in the aftermath of a raid, far from home, holding a relic that could decide the fate of a kingdom. With only a weary mount, a torn map, and a half-empty saddlebag, you must thread rival realms and warring frontiers to deliver your charge—or die unknown along the road.
 
 ---
 
@@ -72,9 +72,9 @@ Stick to them unless we explicitly change the baseline in a future PR.
 ---
 
 ## Endgame Paths (When Complete)  
-1. **Azure – Pax Romana**: escort the relic to Rome and secure papal sanction.  
+1. **Azure – Pax Romana**: escort the relic to the grand cathedral and secure high sanction.
 2. **Vert – Seed of Yggdrasil**: ally with a Norse skald to plant a holy oak on pagan soil.  
-3. **Or – House of Wisdom**: ferry four scholars to Córdoba to spark a new renaissance.  
+3. **Or – House of Wisdom**: ferry four scholars to a distant library to spark a new renaissance.
 4. **Gules – The Red Cross**: raise a refugee banner and break a siege.  
 5. **Sable – The Black Plague**: venture into a quarantined city bearing a legendary cure—or join the darkness.  
 6. **Argent – Homecoming**: thread treacherous borders to lay the relic at a dying king’s bedside.

@@ -2,7 +2,7 @@ export const parchmentTile = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-
 export const leatherTile = 'PASTE_URL_HERE';
 export const mapVignette = 'PASTE_URL_HERE';
 
-export const europeMap = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-9e387411d153/ChatGPT%20Image%20May%2027%2C%202025%2C%2001_55_50%20PM.png?v=1748368562677';
+export const worldMap = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-9e387411d153/ChatGPT%20Image%20May%2027%2C%202025%2C%2001_55_50%20PM.png?v=1748368562677';
 export const nodeDefault = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-9e387411d153/ChatGPT%20Image%20May%2027%2C%202025%2C%2009_19_11%20AM.png?v=1748367014349';
 export const nodeCurrent = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-9e387411d153/ChatGPT%20Image%20May%2027%2C%202025%2C%2009_21_24%20AM.png?v=1748367018581';
 export const nodeVisited = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-9e387411d153/ChatGPT%20Image%20May%2027%2C%202025%2C%2009_20_40%20AM.png?v=1748367016509';
