@@ -79,13 +79,11 @@ export function runEncounter(world, playerId, data, diaryFn, inventory, state, o
     }
     if (outcome.diary && outcome.diaryFn) outcome.diaryFn(outcome.diary);
 
-    let fatal = false;
-    if (!fatal) {
-      for (const type of Object.values(RES_MAP)) {
-        const res = world.query(type).find(r => r.id === playerId);
-        if (res && res.comps[0].amount <= 0) { fatal = true; break; }
-      }
-    }
+    const SURVIVAL_RES = [PROVISIONS, WATER];
+    const fatal = SURVIVAL_RES.some(type => {
+      const res = world.query(type).find(r => r.id === playerId);
+      return res && res.comps[0].amount <= 0;
+    });
 
     panel.remove();
     overlay.remove();
