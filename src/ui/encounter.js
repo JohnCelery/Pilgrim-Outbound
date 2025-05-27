@@ -11,6 +11,7 @@ import {
   FLAGS
 } from '../components.js';
 import { createDeathScreen } from './deathScreen.js';
+import { modalFrame, btnPlank, heroMarket } from '../assets.js';
 
 let panel;
 let overlay;
@@ -111,7 +112,7 @@ export function runEncounter(world, playerId, data, diaryFn, inventory, state, o
   panel.style.left = '50%';
   panel.style.top = '50%';
   panel.style.transform = 'translate(-50%, -50%)';
-  panel.style.backgroundImage = "url('PASTE_URL_HERE')";
+  panel.style.backgroundImage = `url('${modalFrame}')`;
   panel.style.backgroundSize = 'contain';
   panel.style.backgroundRepeat = 'no-repeat';
   panel.style.width = '1280px';
@@ -128,7 +129,7 @@ export function runEncounter(world, playerId, data, diaryFn, inventory, state, o
   panel.style.zIndex = '1000';
 
   const hero = new Image();
-  hero.src = data.image || 'PASTE_URL_HERE';
+  hero.src = data.image || heroMarket;
   hero.style.width = '100%';
   hero.style.flex = '1';
   hero.style.objectFit = 'cover';
@@ -158,7 +159,7 @@ export function runEncounter(world, playerId, data, diaryFn, inventory, state, o
     btn.textContent = choice.option || choice;
     btn.style.display = 'block';
     btn.style.margin = '4px auto';
-    btn.style.backgroundImage = "url('PASTE_URL_HERE')";
+    btn.style.backgroundImage = `url('${btnPlank}')`;
     btn.style.backgroundSize = 'cover';
     btn.style.border = 'none';
     btn.style.padding = '8px 16px';
@@ -175,7 +176,7 @@ export function runEncounter(world, playerId, data, diaryFn, inventory, state, o
     btn.textContent = 'Continue';
     btn.style.display = 'block';
     btn.style.margin = '4px auto';
-    btn.style.backgroundImage = "url('PASTE_URL_HERE')";
+    btn.style.backgroundImage = `url('${btnPlank}')`;
     btn.style.backgroundSize = 'cover';
     btn.style.border = 'none';
     btn.style.padding = '8px 16px';
