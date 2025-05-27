@@ -1,36 +1,71 @@
-export function createTitleScreen(onStart) {
+export function createTitleScreen(onRide) {
   const overlay = document.createElement('div');
   overlay.style.position = 'absolute';
   overlay.style.left = '0';
   overlay.style.top = '0';
   overlay.style.width = '100%';
   overlay.style.height = '100%';
-  overlay.style.background = 'rgba(0, 0, 0, 0.85)';
-  overlay.style.color = '#fff';
+  overlay.style.backgroundImage = "url('PASTE_URL_HERE')";
+  overlay.style.backgroundSize = 'cover';
   overlay.style.display = 'flex';
   overlay.style.flexDirection = 'column';
   overlay.style.justifyContent = 'center';
   overlay.style.alignItems = 'center';
   overlay.style.zIndex = '1000';
+  overlay.style.opacity = '1';
+  overlay.style.transition = 'opacity 0.5s';
 
-  const title = document.createElement('h1');
-  title.textContent = 'Pilgrim Outbound';
-  overlay.appendChild(title);
+  const titleImg = new Image();
+  titleImg.src = 'PASTE_URL_HERE';
+  titleImg.style.marginBottom = '16px';
+  overlay.appendChild(titleImg);
 
-  const flavor = document.createElement('p');
-  flavor.textContent = 'A lone courier rides into the unknown.';
-  flavor.style.marginBottom = '16px';
-  overlay.appendChild(flavor);
-
-  const startBtn = document.createElement('button');
-  startBtn.textContent = 'Start Journey';
-  startBtn.addEventListener('click', () => {
-    overlay.remove();
-    if (onStart) onStart();
+  const beginBtn = document.createElement('button');
+  beginBtn.textContent = 'Begin Journey';
+  beginBtn.style.transition = 'filter 0.2s';
+  beginBtn.addEventListener('mouseover', () => {
+    beginBtn.style.filter = 'brightness(1.2)';
   });
-  overlay.appendChild(startBtn);
+  beginBtn.addEventListener('mouseout', () => {
+    beginBtn.style.filter = 'brightness(1)';
+  });
 
+  const seedPanel = document.createElement('div');
+  seedPanel.style.position = 'absolute';
+  seedPanel.style.left = '50%';
+  seedPanel.style.top = '50%';
+  seedPanel.style.transform = 'translate(-50%, -50%)';
+  seedPanel.style.backgroundImage = "url('PASTE_URL_HERE')";
+  seedPanel.style.backgroundSize = 'cover';
+  seedPanel.style.padding = '16px';
+  seedPanel.style.display = 'none';
+
+  const seedInput = document.createElement('input');
+  seedInput.placeholder = 'Run Seed (optional)';
+  seedInput.style.display = 'block';
+  seedInput.style.marginBottom = '8px';
+  seedPanel.appendChild(seedInput);
+
+  const rideBtn = document.createElement('button');
+  rideBtn.textContent = 'Ride';
+  rideBtn.addEventListener('click', () => {
+    const seed = seedInput.value.trim();
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.remove();
+      if (onRide) onRide(seed);
+    }, 500);
+  });
+  seedPanel.appendChild(rideBtn);
+
+  overlay.appendChild(beginBtn);
+  overlay.appendChild(seedPanel);
   document.body.appendChild(overlay);
+
+  beginBtn.addEventListener('click', () => {
+    beginBtn.style.display = 'none';
+    seedPanel.style.display = 'block';
+  });
 
   return {
     destroy() { overlay.remove(); }

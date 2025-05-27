@@ -7,6 +7,7 @@ import { createMapUI } from './ui/mapUI.js';
 import { runEncounter } from './ui/encounter.js';
 import { createDiary } from './ui/diary.js';
 import { createInventory } from './ui/inventory.js';
+import { createGameState } from './gameState.js';
 // Keep both imports:
 import { createTitleScreen } from './ui/titleScreen.js';
 import { createResourceMenu } from './ui/resourceMenu.js';
@@ -69,12 +70,16 @@ const COMBAT_EVENTS = {
   }
 };
 
-function startGame() {
+function startGame(seedStr = '') {
   const canvas = document.getElementById('game');
   canvas.width = 800;
   canvas.height = 600;
 
-  const rng = createRng();
+  const seed = seedStr ? BigInt(seedStr) : BigInt(Date.now());
+  const state = createGameState(seed);
+  window.gameState = state;
+
+  const rng = createRng(seed);
   const world = createWorld();
   const renderer = createRenderer(canvas);
   const loop = createLoop(step);
@@ -93,11 +98,11 @@ function startGame() {
 
   const player = world.createEntity();
   addPosition(world, player, 0, 0);
-  addProvisions(world, player, 10);
-  addWater(world, player, 10);
+  addProvisions(world, player, state.meters.food);
+  addWater(world, player, state.meters.water);
   addHealth(world, player, 100);
   addStamina(world, player, 100);
-  addGear(world, player, 10);
+  addGear(world, player, state.meters.gear);
   addIron(world, player, 0);
   addSilver(world, player, 0);
   addWood(world, player, 0);
@@ -105,7 +110,7 @@ function startGame() {
   addFlags(world, player);
 
   hud = createHud(world, player);
-  inventory = createInventory();
+  inventory = createInventory(['grain_sack', 'waterskin', 'toolkit']);
   inventory.hide();
   resources = createResourceMenu(world, player);
   resources.update();
@@ -132,7 +137,7 @@ function startGame() {
   invBtn.addEventListener('click', () => inventory.toggle());
   document.body.appendChild(invBtn);
 
-  const diary = createDiary();
+  const diary = createDiary(state);
 
   fetch('data/encounters.json')
     .then(r => r.json())
@@ -270,6 +275,7 @@ function startGame() {
     mapUI.disable();
     mapUI.update();
     mapUI.enable();
+    diary.add(`Day 1 — Set forth from ${currentWaypoint}.`);
   });
 
   function step(_dt) {
@@ -286,7 +292,7 @@ function startGame() {
 
 function boot() {
   // Show title screen and pass startGame as callback
-  createTitleScreen(startGame);
+  createTitleScreen(seed => startGame(seed));
 }
 
 window.addEventListener('DOMContentLoaded', boot);

@@ -10,16 +10,12 @@ export function createRenderer(canvas) {
   };
 }
 
-const baseUrl =
-  'https://cdn.glitch.global/813b10b4-5e9c-4e7c-9356-9c7f504e5ff1/';
-
-const waypointUrl = `${baseUrl}node_default.png`;
-const currentUrl = `${baseUrl}node_current.png`;
-const visitedUrl = `${baseUrl}node_visited.png`;
-const markerUrl = `${baseUrl}marker.png`;
-const shadowUrl = `${baseUrl}marker_shadow.png`;
-const worldMapUrl =
-  'https://cdn.glitch.global/d2170d50-99c2-4bff-b832-8d66b4d6e1f9/D217F327-6759-4EAC-9371-783E96C6D07B.png?v=1748360813466';
+const waypointUrl = 'PASTE_URL_HERE';
+const currentUrl = 'PASTE_URL_HERE';
+const visitedUrl = 'PASTE_URL_HERE';
+const markerUrl = 'PASTE_URL_HERE';
+const shadowUrl = 'PASTE_URL_HERE';
+const worldMapUrl = 'PASTE_URL_HERE';
 
 let waypointImg;
 let currentImg;
@@ -83,4 +79,18 @@ export function drawMap(ctx, map, playerPos = null) {
     ctx.drawImage(shadowImg, baseX + 32 - 8, baseY + 48, 16, 16);
     ctx.drawImage(markerImg, baseX + 8, baseY + 8, 48, 48);
   }
+
+  // subtle radial vignette
+  const g = ctx.createRadialGradient(
+    ctx.canvas.width / 2,
+    ctx.canvas.height / 2,
+    0,
+    ctx.canvas.width / 2,
+    ctx.canvas.height / 2,
+    Math.max(ctx.canvas.width, ctx.canvas.height) / 2
+  );
+  g.addColorStop(0, 'rgba(0,0,0,0)');
+  g.addColorStop(1, 'rgba(0,0,0,0.4)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 }

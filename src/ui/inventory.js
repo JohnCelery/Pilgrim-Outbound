@@ -1,4 +1,4 @@
-export function createInventory() {
+export function createInventory(starterItems = []) {
   const container = document.createElement('div');
   container.style.position = 'absolute';
   container.style.right = '10px';
@@ -55,28 +55,28 @@ export function createInventory() {
     dragging = null;
   }
 
-  function makeItem(color) {
-    const item = document.createElement('div');
-    item.style.width = '48px';
-    item.style.height = '48px';
-    item.style.background = color;
-    item.style.position = 'absolute';
-    item.style.left = '8px';
-    item.style.top = '8px';
-    item.addEventListener('mousedown', ev => {
-      dragging = item;
+
+  // populate starter items if provided
+  starterItems.forEach((item, idx) => {
+    const cell = cells[idx];
+    if (!cell) return;
+    const img = new Image();
+    img.src = 'PASTE_URL_HERE';
+    img.style.width = '48px';
+    img.style.height = '48px';
+    img.style.position = 'absolute';
+    img.style.left = '8px';
+    img.style.top = '8px';
+    img.addEventListener('mousedown', ev => {
+      dragging = img;
       offsetX = ev.offsetX + 8;
       offsetY = ev.offsetY + 8;
-      item.style.pointerEvents = 'none';
+      img.style.pointerEvents = 'none';
       document.addEventListener('mousemove', onDrag);
       document.addEventListener('mouseup', onDrop);
     });
-    return item;
-  }
-
-  // placeholder items
-  cells[0].appendChild(makeItem('#c0352b'));
-  cells[1].appendChild(makeItem('#44a167'));
+    cell.appendChild(img);
+  });
 
   function show() {
     container.style.display = 'grid';
