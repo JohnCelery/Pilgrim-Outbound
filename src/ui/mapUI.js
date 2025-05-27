@@ -104,6 +104,7 @@ export function createMapUI(canvas, mapData, world, playerId, onTravel) {
   return {
     update: updateHighlights,
     disable() { enabled = false; highlightLayer.innerHTML = ''; overlay.style.display = 'none'; },
+    enable() { enabled = true; updateHighlights(); },
     destroy() {
       canvas.removeEventListener('mousemove', onMove);
       canvas.removeEventListener('click', onClick);
