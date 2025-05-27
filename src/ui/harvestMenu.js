@@ -4,10 +4,11 @@ import {
   GEAR,
   IRON,
   WOOD,
-  STAMINA
+  STAMINA,
+  FORTUNE
 } from '../components.js';
 
-export function createHarvestMenu(world, playerId) {
+export function createHarvestMenu(world, playerId, diaryFn = null, inventory = null) {
   const panel = document.createElement('div');
   panel.style.position = 'absolute';
   panel.style.left = '50%';
@@ -41,14 +42,27 @@ export function createHarvestMenu(world, playerId) {
     gear: GEAR,
     iron: IRON,
     wood: WOOD,
-    stamina: STAMINA
+    stamina: STAMINA,
+    fortune: FORTUNE
   };
 
   const SITE_DATA = {
-    farm: { cost: { stamina: 5 }, gain: { food: 5 } },
-    forest: { cost: { stamina: 5 }, gain: { wood: 5 } },
-    river: { cost: { stamina: 5 }, gain: { water: 5 } },
-    mine: { cost: { stamina: 5, gear: 1 }, gain: { iron: 3 } }
+    farm: {
+      icon: 'PASTE_URL_HERE',
+      loot: [{ type: 'food', amount: 5 }]
+    },
+    forest: {
+      icon: 'PASTE_URL_HERE',
+      loot: [{ type: 'wood', amount: 5 }]
+    },
+    river: {
+      icon: 'PASTE_URL_HERE',
+      loot: [{ type: 'water', amount: 5 }]
+    },
+    mine: {
+      icon: 'PASTE_URL_HERE',
+      loot: [{ type: 'iron', amount: 3 }]
+    }
   };
 
   function modify(type, delta) {
@@ -59,27 +73,89 @@ export function createHarvestMenu(world, playerId) {
     }
   }
 
-  function apply(site) {
+  function rollLoot(site) {
     const data = SITE_DATA[site];
-    if (!data) return;
-    for (const [k, v] of Object.entries(data.cost || {})) {
-      const type = RES_MAP[k];
-      if (type) modify(type, -v);
-    }
-    for (const [k, v] of Object.entries(data.gain || {})) {
-      const type = RES_MAP[k];
-      if (type) modify(type, v);
-    }
+    if (!data || !data.loot) return [];
+    return data.loot;
   }
+
+  function harvest(site, depth) {
+    const foodCost = depth * 5;
+    const gearCost = depth * 1;
+    modify(PROVISIONS, -foodCost);
+    modify(GEAR, -gearCost);
+
+    const gained = {};
+    for (let i = 0; i < depth; i++) {
+      for (const item of rollLoot(site)) {
+        const type = RES_MAP[item.type];
+        if (type) {
+          modify(type, item.amount);
+          gained[item.type] = (gained[item.type] || 0) + item.amount;
+        }
+      }
+    }
+
+    if (Math.random() < 0.2) {
+      modify(GEAR, -5);
+      if (diaryFn) diaryFn('Mishap damaged gear during harvest.');
+    }
+
+    const parts = [];
+    for (const [k, v] of Object.entries(gained)) {
+      parts.push(`${k}+${v}`);
+    }
+    if (parts.length && diaryFn) diaryFn(`Harvested ${site}: ${parts.join(', ')}`);
+  }
+
+  const depthPanel = document.createElement('div');
+  depthPanel.style.marginTop = '8px';
+  depthPanel.style.display = 'none';
+  list.appendChild(depthPanel);
+
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.min = '1';
+  slider.max = '3';
+  slider.value = '1';
+  depthPanel.appendChild(slider);
+
+  const depthConfirm = document.createElement('button');
+  depthConfirm.textContent = 'Extract';
+  depthConfirm.style.marginLeft = '4px';
+  depthPanel.appendChild(depthConfirm);
+
+  let currentSite = null;
+  depthConfirm.addEventListener('click', () => {
+    if (currentSite) {
+      const depth = parseInt(slider.value, 10) || 1;
+      harvest(currentSite, depth);
+    }
+    depthPanel.style.display = 'none';
+  });
 
   function show(sites = []) {
     list.innerHTML = '';
+    list.appendChild(depthPanel);
+    depthPanel.style.display = 'none';
     for (const site of sites) {
+      const data = SITE_DATA[site] || {};
       const btn = document.createElement('button');
-      btn.textContent = `Harvest ${site}`;
-      btn.style.display = 'block';
-      btn.style.marginBottom = '4px';
-      btn.addEventListener('click', () => apply(site));
+      if (data.icon) {
+        const img = new Image();
+        img.src = data.icon;
+        img.style.width = '32px';
+        img.style.height = '32px';
+        btn.appendChild(img);
+      } else {
+        btn.textContent = site;
+      }
+      btn.style.display = 'inline-block';
+      btn.style.margin = '4px';
+      btn.addEventListener('click', () => {
+        currentSite = site;
+        depthPanel.style.display = 'block';
+      });
       list.appendChild(btn);
     }
     panel.style.display = 'block';

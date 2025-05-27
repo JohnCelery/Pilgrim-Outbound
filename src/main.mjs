@@ -117,7 +117,6 @@ function startGame(seedStr = '') {
   inventory.hide();
   resources = createResourceMenu(world, player);
   resources.update();
-  harvest = createHarvestMenu(world, player);
   travelConfirm = createTravelConfirm();
 
   // A button to toggle the resource menu
@@ -141,6 +140,7 @@ function startGame(seedStr = '') {
   document.body.appendChild(invBtn);
 
   const diary = createDiary(state);
+  harvest = createHarvestMenu(world, player, diary.add, inventory);
 
   fetch('data/encounters.json')
     .then(r => r.json())
