@@ -5,7 +5,19 @@ import {
   marker as markerUrl,
   markerShadow as shadowUrl,
   europeMap as worldMapUrl,
-  mapVignette
+  mapVignette,
+  iconMarket,
+  iconMonastery,
+  iconFarmland,
+  iconForest,
+  iconMountain,
+  iconRiver,
+  iconPort,
+  iconRuin,
+  iconBattlefield,
+  iconHiddenPath,
+  iconEncampment,
+  iconCathedral
 } from '../assets.js';
 
 export function createRenderer(canvas) {
@@ -28,6 +40,32 @@ let markerImg;
 let shadowImg;
 let worldMapImg;
 let vignetteImg;
+const iconImgs = {};
+
+const ICON_SOURCES = {
+  market: iconMarket,
+  monastery: iconMonastery,
+  farmland: iconFarmland,
+  forest: iconForest,
+  mountain: iconMountain,
+  river: iconRiver,
+  port: iconPort,
+  ruin: iconRuin,
+  battlefield: iconBattlefield,
+  hiddenPath: iconHiddenPath,
+  encampment: iconEncampment,
+  cathedral: iconCathedral
+};
+
+function getIcon(type) {
+  if (!ICON_SOURCES[type]) return waypointImg;
+  if (!iconImgs[type]) {
+    const img = new Image();
+    img.src = ICON_SOURCES[type];
+    iconImgs[type] = img;
+  }
+  return iconImgs[type];
+}
 
 export function drawMap(ctx, map, playerPos = null, tween = null) {
   if (!waypointImg) {
@@ -67,7 +105,20 @@ export function drawMap(ctx, map, playerPos = null, tween = null) {
     ctx.drawImage(worldMapImg, 0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
-  for (const wp of map.waypoints) {
+  let toDraw = map.waypoints;
+  if (playerPos) {
+    const current = map.waypoints.find(w => w.coords[0] === playerPos.x && w.coords[1] === playerPos.y);
+    if (current) {
+      toDraw = [current];
+      const names = (current.neighbors || []).slice(0, 2);
+      for (const n of names) {
+        const wp = map.waypoints.find(w => w.name === n);
+        if (wp) toDraw.push(wp);
+      }
+    }
+  }
+
+  for (const wp of toDraw) {
     const [gx, gy] = wp.coords;
     const x = ctx.canvas.width / 2 + gx * 64 - 32;
     const y = ctx.canvas.height / 2 + gy * 64 - 32;
@@ -75,8 +126,8 @@ export function drawMap(ctx, map, playerPos = null, tween = null) {
     let img = waypointImg;
     if (playerPos && gx === playerPos.x && gy === playerPos.y) {
       img = currentImg;
-    } else if (wp.visited) {
-      img = visitedImg;
+    } else {
+      img = getIcon(wp.type || 'market');
     }
 
     ctx.drawImage(img, x, y, 64, 64);
