@@ -17,6 +17,7 @@ export function createLocationMenu(world, playerId, diaryFn = null, inventory = 
   panel.style.left = '50%';
   panel.style.top = '50%';
   panel.style.transform = 'translate(-50%, -50%)';
+  panel.style.zIndex = '1000';
   panel.style.backgroundImage = `url('${modalFrame}')`;
   panel.style.backgroundSize = 'contain';
   panel.style.backgroundRepeat = 'no-repeat';
