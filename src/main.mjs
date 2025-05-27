@@ -172,7 +172,7 @@ function startGame(seedStr = '') {
 
   const diary = createDiary(state);
   harvest = createHarvestMenu(world, player, diary.add, inventory);
-  locationMenu = createLocationMenu(world, player, diary.add);
+  locationMenu = createLocationMenu(world, player, diary.add, inventory);
 
   fetch('data/encounters.json')
     .then(r => r.json())
@@ -190,6 +190,8 @@ function startGame(seedStr = '') {
     if (flags.marsh_curse) water += 1;
     const coastalHop = (startWp?.tags || []).includes('coastal') || (wp.tags || []).includes('coastal');
     if (flags.silk_sail && coastalHop) food = Math.max(0, food - 1);
+    if (flags.ferry_discount) { food = Math.floor(food / 2); delete flags.ferry_discount; }
+    if (flags.sea_passage_discount) { food = Math.floor(food / 2); delete flags.sea_passage_discount; }
     return { food, water };
   }
 

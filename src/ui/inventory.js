@@ -1,4 +1,4 @@
-import { gridCell, grainSack, waterskin, toolkit, leatherTile } from '../assets.js';
+import { gridCell, grainSack, waterskin, toolkit, silkBundle, leatherTile } from '../assets.js';
 
 export function createInventory(starterItems = []) {
   const container = document.createElement('div');
@@ -57,7 +57,8 @@ export function createInventory(starterItems = []) {
     const ITEM_MAP = {
       grain_sack: grainSack,
       waterskin: waterskin,
-      toolkit: toolkit
+      toolkit: toolkit,
+      silk_bundle: silkBundle
     };
     img.src = ITEM_MAP[item] || 'PASTE_URL_HERE';
     img.style.width = '48px';
