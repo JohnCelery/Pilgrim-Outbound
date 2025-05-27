@@ -1,0 +1,326 @@
+{
+  "encounters": [
+    {
+      "id": "scribe_tower",
+      "weight": 8,
+      "text": "The courier finds a tottering bell-tower in sunset wheat fields; inside, a trembling monk illuminates what he claims is the last verse of Charlemagne's coronation psalm.",
+      "options": [
+        {
+          "option": "Help finish the lettering",
+          "outcome": {
+            "resources": {"water": -5, "fortune": 1},
+            "setFlags": ["word_rex"],
+            "diary": "Gold leaf catches the dying sun."
+          }
+        },
+        {
+          "option": "Offer provisions for the page",
+          "outcome": {
+            "resources": {"food": -10},
+            "setFlags": ["relic_scrap"],
+            "diary": "The monk gratefully hands you a relic scrap."
+          }
+        },
+        {
+          "option": "Steal the vellum after the monk sleeps",
+          "outcome": {
+            "resources": {"gear": -10},
+            "setFlags": ["relic_scrap", "monastic_wrath"],
+            "diary": "The stairs collapse as you flee with the vellum."
+          }
+        }
+      ]
+    },
+    {
+      "id": "nordic_funeral_pyre",
+      "weight": 7,
+      "text": "A burning longship on a frozen inlet; three shield-maidens search the ice for their jarl's sword and chant in Old Norse.",
+      "options": [
+        {
+          "option": "Join the chant",
+          "outcome": {
+            "resources": {"water": 10},
+            "setFlags": ["nordic_friendly", "word_brodir"],
+            "diary": "You melt snow for broth as the chant echoes." 
+          }
+        },
+        {
+          "option": "Dive for the sword",
+          "outcome": {
+            "random": {
+              "chance": 0.5,
+              "success": {
+                "resources": {"fortune": 1},
+                "setFlags": ["frost_sword"],
+                "diary": "You surface clutching a frost runed blade." 
+              },
+              "fail": {
+                "resources": {"gear": -20},
+                "diary": "Icy water saps your strength." 
+              }
+            }
+          }
+        },
+        {
+          "option": "Quietly depart",
+          "outcome": {
+            "clearFlags": ["nordic_friendly"],
+            "diary": "You leave the ceremony behind." 
+          }
+        }
+      ]
+    },
+    {
+      "id": "rusted_aqueduct",
+      "weight": 8,
+      "text": "A lone Andalusi engineer studies ruined Roman arches and mutters about pressure gates.",
+      "options": [
+        {
+          "option": "Lend your toolkit",
+          "outcome": {
+            "resources": {"gear": -5},
+            "setFlags": ["recipe_hydraulic_pump"],
+            "diary": "The engineer sketches a hydraulic pump." 
+          }
+        },
+        {
+          "option": "Ask him to mend your waterskin",
+          "outcome": {
+            "resources": {"water": 15},
+            "diary": "Your waterskin holds more than before." 
+          }
+        },
+        {
+          "option": "Scavenge fallen iron clamps",
+          "outcome": {
+            "resources": {"iron": 25},
+            "setFlags": ["umayyad_resent"],
+            "diary": "You pry loose rusted clamps, drawing resentful eyes." 
+          }
+        }
+      ]
+    },
+    {
+      "id": "black_dog_shrine",
+      "weight": 6,
+      "once": true,
+      "text": "A jet-black hound with ember eyes guards a stone carved with both runes and chi-rho.",
+      "options": [
+        {
+          "option": "Feed the dog",
+          "outcome": {
+            "resources": {"food": -5},
+            "setFlags": ["dog_companion"],
+            "diary": "The dog falls in beside you." 
+          }
+        },
+        {
+          "option": "Read the runes aloud",
+          "outcome": {
+            "random": {
+              "chance": 0.5,
+              "success": {"setFlags": ["odin_warning"], "diary": "Odin's voice whispers caution."},
+              "fail": {"resources": {"fortune": -1}, "diary": "A dark omen chills your bones."}
+            }
+          }
+        },
+        {
+          "option": "Ignore and pray",
+          "outcome": {
+            "setFlags": ["faith_thumb"],
+            "diary": "You whisper a humble prayer." 
+          }
+        }
+      ]
+    },
+    {
+      "id": "plague_cart",
+      "weight": 5,
+      "text": "A corpse wagon in grey fog, a beaked doctor asking for iron to buy quicklime.",
+      "options": [
+        {
+          "option": "Pay him",
+          "outcome": {
+            "resources": {"iron": -10, "fortune": 1},
+            "clearFlags": ["plague_malaise"],
+            "diary": "Mercy buys you a blessing." 
+          }
+        },
+        {
+          "option": "Search the cart",
+          "outcome": {
+            "resources": {"silver": 20},
+            "random": {
+              "chance": 0.25,
+              "success": {"setFlags": ["plague_malaise"], "diary": "You cough in the rising dust."},
+              "fail": {"diary": "You find only tarnished coins."}
+            }
+          }
+        },
+        {
+          "option": "Help bury the dead",
+          "outcome": {
+            "resources": {"water": -10, "gear": -10},
+            "setFlags": ["grace_token"],
+            "diary": "The doctor thanks you for your grace." 
+          }
+        }
+      ]
+    },
+    {
+      "id": "cistern_architects",
+      "weight": 7,
+      "text": "Underground crystal pipes still drip pristine water beneath a mosaic of a six-armed sun.",
+      "options": [
+        {
+          "option": "Fill every container",
+          "outcome": {
+            "random": {
+              "chance": 0.9,
+              "success": {"resources": {"water": 50}, "diary": "Your barrels brim with crystal water."},
+              "fail": {"resources": {"gear": -25}, "diary": "A cave-in smashes your gear."}
+            }
+          }
+        },
+        {
+          "option": "Extract a crystal valve",
+          "outcome": {
+            "resources": {"water": -20},
+            "setFlags": ["roman_tech_shard"],
+            "diary": "A shard of Roman tech glints in your hand." 
+          }
+        },
+        {
+          "option": "Meditate before the mosaic",
+          "outcome": {
+            "setFlags": ["coord_azure", "word_lux"],
+            "diary": "Visions of a distant path flood your mind." 
+          }
+        }
+      ]
+    },
+    {
+      "id": "kite_scholar",
+      "weight": 6,
+      "text": "A mathematician flies a silk kite to map enemy lines.",
+      "options": [
+        {
+          "option": "Hold the tether",
+          "outcome": {
+            "random": {
+              "chance": 0.6,
+              "success": {"resources": {"fortune": 1}, "diary": "The kite reveals hidden roads."},
+              "fail": {"resources": {"gear": -15}, "diary": "The wind drags you over rocks."}
+            }
+          }
+        },
+        {
+          "option": "Buy the silk",
+          "outcome": {
+            "resources": {"silver": -20},
+            "setFlags": ["module_silk_sail"],
+            "diary": "You pack the shimmering silk." 
+          }
+        },
+        {
+          "option": "Ride on and report",
+          "outcome": {
+            "setFlags": ["carolingian_favor"],
+            "diary": "Your report earns quiet gratitude." 
+          }
+        }
+      ]
+    },
+    {
+      "id": "silent_oak",
+      "weight": 5,
+      "text": "A hollow oak hums; wax tablets filled with prayers are jammed into its bark.",
+      "options": [
+        {
+          "option": "Add your own prayer",
+          "outcome": {
+            "resources": {"fortune": -1, "food": 20},
+            "diary": "Villagers leave food in thanks." 
+          }
+        },
+        {
+          "option": "Read the tablets aloud",
+          "outcome": {
+            "random": {
+              "chance": 0.5,
+              "success": {"setFlags": ["word_miserere"], "diary": "A new word settles on your tongue."},
+              "fail": {"setFlags": ["bandit_ambush"], "diary": "Leaves rustle with hidden danger."}
+            }
+          }
+        },
+        {
+          "option": "Harvest resin",
+          "outcome": {
+            "resources": {"wood": 15},
+            "setFlags": ["village_resent"],
+            "diary": "Sticky resin coats your hands." 
+          }
+        }
+      ]
+    },
+    {
+      "id": "broken_astrolabe",
+      "weight": 6,
+      "text": "A shattered brass astrolabe lies in a ditch under bright stars.",
+      "options": [
+        {
+          "option": "Repair overnight",
+          "outcome": {
+            "resources": {"food": -10, "gear": -5},
+            "setFlags": ["working_astrolabe"],
+            "diary": "Gears click as the astrolabe whirs." 
+          }
+        },
+        {
+          "option": "Melt for metal",
+          "outcome": {
+            "resources": {"copper": 25, "gear": -5},
+            "diary": "Molten brass pools at your feet." 
+          }
+        },
+        {
+          "option": "Mark for later",
+          "outcome": {
+            "setFlags": ["astrolabe_cache"],
+            "diary": "You note the stars for a return." 
+          }
+        }
+      ]
+    },
+    {
+      "id": "valkyrie_bridge",
+      "weight": 4,
+      "text": "A pale mailed woman stands on a bridge of light offering white and black feathers.",
+      "options": [
+        {
+          "option": "Take white feather",
+          "outcome": {
+            "resources": {"gear": 100, "water": 5},
+            "setFlags": ["mercy"],
+            "diary": "A calm strength fills your limbs." 
+          }
+        },
+        {
+          "option": "Take black feather",
+          "outcome": {
+            "resources": {"fortune": 1, "iron": 20},
+            "setFlags": ["blood_oath"],
+            "diary": "Dark resolve steels your heart." 
+          }
+        },
+        {
+          "option": "Refuse and bow",
+          "outcome": {
+            "setFlags": ["coord_sable"],
+            "diary": "The valkyrie nods toward distant shadows." 
+          }
+        }
+      ]
+    }
+  ]
+}

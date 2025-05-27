@@ -1,4 +1,4 @@
-import { PROVISIONS, WATER } from '../components.js';
+import { PROVISIONS, WATER, GEAR, FORTUNE } from '../components.js';
 
 // Placeholder icons for stats not yet backed by real assets
 const healthIcon = '❤';
@@ -31,6 +31,8 @@ export function createHud(world, playerId) {
     draw(ctx) {
       const prov = getComp(PROVISIONS) || { amount: 0 };
       const wat = getComp(WATER) || { amount: 0 };
+      const gear = getComp(GEAR) || { amount: 0 };
+      const fortune = getComp(FORTUNE) || { amount: 0 };
       const hp = getComp('health') || { amount: 100 };
       const sta = getComp('stamina') || { amount: 100 };
 
@@ -46,6 +48,14 @@ export function createHud(world, playerId) {
       // Water
       ctx.drawImage(waterImg, 10, 50, iconSize, iconSize);
       ctx.fillText(String(wat.amount), 10 + iconSize + 8, 50 + 24);
+
+      // Gear
+      ctx.fillText('G:', 10, 90);
+      ctx.fillText(String(gear.amount), 26, 90);
+
+      // Fortune
+      ctx.fillText('F:', 10, 110);
+      ctx.fillText(String(fortune.amount), 26, 110);
 
       // Health
       ctx.font = '24px sans-serif';

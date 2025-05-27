@@ -1,24 +1,63 @@
-import { PROVISIONS, WATER, HEALTH, STAMINA } from '../components.js';
+import {
+  PROVISIONS,
+  WATER,
+  HEALTH,
+  STAMINA,
+  GEAR,
+  IRON,
+  SILVER,
+  WOOD,
+  FORTUNE,
+  FLAGS
+} from '../components.js';
 
 let panel;
 
-export function runEncounter(world, playerId, data, onComplete) {
+export function runEncounter(world, playerId, data, diaryFn, onComplete) {
   if (panel) panel.remove();
 
-  function applyCost(cost) {
-    for (const [key, val] of Object.entries(cost)) {
-      let type = null;
-      if (key === 'food') type = PROVISIONS;
-      else if (key === 'water') type = WATER;
-      else if (key === 'health') type = HEALTH;
-      else if (key === 'stamina') type = STAMINA;
-      if (!type) continue;
-      const res = world.query(type).find(r => r.id === playerId);
-      if (res) {
-        const comp = res.comps[0];
-        comp.amount = Math.max(0, comp.amount - val);
+  const RES_MAP = {
+    food: PROVISIONS,
+    water: WATER,
+    health: HEALTH,
+    stamina: STAMINA,
+    gear: GEAR,
+    iron: IRON,
+    silver: SILVER,
+    wood: WOOD,
+    fortune: FORTUNE
+  };
+
+  function modifyResource(key, delta) {
+    const type = RES_MAP[key];
+    if (!type) return;
+    const res = world.query(type).find(r => r.id === playerId);
+    if (res) {
+      const comp = res.comps[0];
+      comp.amount = Math.max(0, (comp.amount || 0) + delta);
+    }
+  }
+
+  function applyOutcome(outcome) {
+    if (!outcome) return;
+    if (outcome.random) {
+      const roll = Math.random();
+      if (roll < outcome.random.chance) applyOutcome(outcome.random.success);
+      else applyOutcome(outcome.random.fail);
+      return;
+    }
+    for (const [k, v] of Object.entries(outcome.resources || {})) {
+      modifyResource(k, v);
+    }
+    if (outcome.setFlags || outcome.clearFlags) {
+      const flagRes = world.query(FLAGS).find(r => r.id === playerId);
+      if (flagRes) {
+        const flags = flagRes.comps[0];
+        for (const f of outcome.setFlags || []) flags[f] = true;
+        for (const f of outcome.clearFlags || []) delete flags[f];
       }
     }
+    if (outcome.diary && outcome.diaryFn) outcome.diaryFn(outcome.diary);
   }
 
   panel = document.createElement('div');
@@ -58,7 +97,8 @@ export function runEncounter(world, playerId, data, onComplete) {
     btn.textContent = choice.option || choice;
     btn.style.marginRight = '6px';
     btn.addEventListener('click', () => {
-      applyCost(choice.cost || {});
+      const out = choice.outcome || {};
+      applyOutcome({ ...out, diaryFn });
       panel.remove();
       if (onComplete) onComplete();
     });
