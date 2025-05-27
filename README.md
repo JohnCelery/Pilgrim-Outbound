@@ -1,97 +1,111 @@
-# Pilgrim Outbound  
-*A zero-dependency browser roguelike set in a mythic age*
+1 Game in one breath
+A lone courier, a tired horse, and a relic that might save what’s left of Charlemagne’s realm.
+Spend food, water, and gear while crossing a parchment map. Survive bleak, mystical encounters, harvest ruined lands for supplies, and chase one of six colour-coded legends before starvation, plague, or fate ends the journey.
 
+2 Core play loop
+Title → Ride
+Click “Begin Journey,” optionally type a seed, then “Ride.”
 
----
+World Map
+Parchment Europe appears. The courier marker stands on the start node; adjacent nodes light up on hover with their food/water cost and tags.
 
-## Setting  
-A great empire has splintered, sea raiders menace every coast, and rumors of plague drift on the trade winds.
-You are a battered royal courier who wakes in the aftermath of a raid, far from home, holding a relic that could decide the fate of a kingdom. With only a weary mount, a torn map, and a half-empty saddlebag, you must thread rival realms and warring frontiers to deliver your charge—or die unknown along the road.
+Travel
+Clicking Fold Road subtracts resources, advances the day, animates the marker, and writes departure/arrival diary lines.
+If food or water hits zero, a death panel ends the run. (Gear depletion is also a potential death condition—see below.)
 
----
+Arrival Encounters
+Zero-to-two story cards pop in a framed modal. Each card shows art, text, and three choices. Choosing one applies its whole bundle of resource deltas, items, flags, RNG, and a diary sentence—then closes the modal or, if fatal, shows the death panel.
 
-## Core Fantasy  
-* Total isolation on a dangerous medieval road network.  
-* Hard choices about where to spend dwindling food, water, and gear integrity.  
-* The constant lure of side-paths—ruined Roman forts, plague-stricken towns, secret pilgrim trails—that promise miracle rewards or instant ruin.  
-* No restart checkpoints; death erases the run but leaves your abandoned baggage as a discoverable loot cache for the next attempt.
+Locality Sites
+The node’s resource sites appear as clickable tiles (farm, forest, mine, etc.). Each click opens a depth slider; every step costs 5 Food + 1 Gear, rolls loot, risks mishap, and logs to the diary. Gear can reach zero here if the player spends too much; see ‘Death causes’ below.
 
----
+Camp / Inventory
+The leather 6 × 4 grid fills the centre screen. Drag items to rearrange, click Craft to build modules, click Repair to spend iron or fortune on Gear. Flags like plague tick here.
 
-## How a Run Plays Out  
+Legend Check
+If the node matches an active legend coordinate and the required cargo is on board, an ending illustration plays, credits roll, a score screen lists days, leftover fortune, and flags, and the caravan is archived as a “grave” discoverable in future runs.
 
-| Phase | What Happens |
-|-------|--------------|
-| **1. Chart the Route** | Study a parchment map dotted with monasteries, markets, and mountain passes.  Click a neighboring waypoint; the game previews the food & water cost and any known dangers. |
-| **2. Pay the Price** | Spend provisions and water.  If either meter hits zero, the courier collapses. |
-| **3. Face the Unknown** | On arrival, one or two narrative events roll: a Norse ambush, a kindly friar, a field surgeon demanding payment.  Short, choose-your-own-adventure snippets can grant supplies, damage gear, or branch into long mission arcs. |
-| **4. Exploit the Locale** | Each node houses 0–4 resource sites: farms (grain), forests (herbs & wood), rivers (water & fish), mines (iron).  Spend tools and stamina to harvest, risking damage with each deeper dig. |
-| **5. Repack & Craft** | Tetris-pack loot into the 6 × 4 saddlebag grid.  Recipes—taught by scholars or found in Roman ruins—let you forge upgrades (chainmail, compass, astrolabe) if the required pieces fit adjacent in the grid.  Better packing grants adjacency bonuses. |
-| **6. Push On** | Check diary missions (six color-flagged “legends” that can end a run), pick the next waypoint, and repeat until you reach an ending— or run out of life support. |
+Back to Map
+If no ending triggers, the camp screen closes and the map awaits the next move. The loop repeats until victory or any death condition fires.
 
-A successful journey lasts 30–60 minutes.  Most fail in 10–20.
+Death causes: starvation, thirst, gear break, instant-death event, or manual abandon.
 
----
+3 Where you can arrive and what you can do
+Market towns: trade food, water, iron, silver; hire healer or translator; haggle; pay church tithe.
 
-## Themes & Tone  
-* **Solitude & Fatalism** – No party, no cavalry; the road itself is the antagonist.  
-* **Syncretic Mysticism** – Miracles, omens, and science coexist; a Muslim scholar’s astrolabe is as valuable as a saint’s finger-bone.  
-* **Determinism** – Every run is driven by a single seed; with perfect memory you could reproduce it move-for-move.  
-* **Ephemeral Legacy** – Death wipes the slate, yet leaves ghostly traces: half-decoded languages, graves containing your previous gear, rumors travelers whisper about “the fallen rider.”  
+Monasteries: repair gear, cure plague, study Latin, safe vespers rest, tempt theft of relics.
 
----
+Farmland hamlets: harvest grain by depth, help peasants for goodwill, fend off bandits.
 
-## Art-Asset Guidelines  (v0.1)
-These specs are “contract values” the code will assume.  
-Stick to them unless we explicitly change the baseline in a future PR.
+Forest clearings: gather wood and herbs, hunt game, seek hidden shortcuts, track clockwork stag.
 
-| Category | Canvas units | Native pixel size | Notes / Style |
-|----------|--------------|-------------------|---------------|
-| **Tiling backgrounds** | full screen | 1024 × 1024 | Seamless parchment or leather tiles. Warm tan #d8c79e base; subtle fiber noise. PNG or high-q WebP. |
-| **Map nodes** | 1 × 1 tile | 64 × 64 | Three sprites per node: `node_default.png`, `node_current.png`, `node_visited.png`. Transparent BG. |
-| **Courier marker** | ¾ tile | 48 × 48 | Horse-and-rider silhouette + separate 16 px oval shadow (`marker.png`, `marker_shadow.png`). |
-| **HUD dials** | 1½ tiles | 96 × 96 | Empty ring only—code will draw meter arc. Center glyphs: wheat = food, droplet = water. |
-| **Inventory grid cell** | 1 × 1 tile | 64 × 64 | Weathered-leather square with stitched border (`grid_cell.png`). Must tile seamlessly. |
-| **Inventory items** | various | multiples of 48 × 48 (inside 64 × 64 cells) | Keep outline, drop-shadow, and 4 px padding transparent. Example placeholders:<br>• `grain_sack_1x1.png` 48×48<br>• `waterskin_1x2.png` 48×96<br>• `toolkit_2x1.png` 96×48 |
-| **Event/modal frame** | n/a | 1280 × 400 | Illuminated manuscript border, transparent center (`modal_frame.png`). |
-| **Large illustrations** (future) | width-fit | ≤ 1280 × 720 | Used for cut-scenes / endings; keep file < 300 KB. |
+Mountain passes: mine iron and stone, scavenge Roman debris, light signal fires, risk avalanches.
 
-### Naming & Placement
-* Place all runtime images in `assets/images/`.
-* Use lowercase snake-case filenames; dimensions encoded only when needed (`itemname_2x1.png`).
-* The build remains atlas-agnostic for now; code loads each PNG by URL.
+River fords or bridges: refill water, fish, hire ferry, inspect singing chains.
 
-### Colour & Finish
-* Palette: lapis blue (#2554a3), vermilion (#c0352b), verdigris (#44a167), ochre (#d7a13b), bone (#f9f3e1), and ebony (#232323).
-* Bold hand-inked outlines (≈2 px at 1× scale), flat fills, light paper grain overlay.
-* Export with premultiplied alpha OFF.
+Ports: buy silk and copper, book sea passage, gossip for rumours, barter with raiders.
 
-> **Rule of thumb:** if an image won’t align to the 64 px grid or the sizes above,
-> decide whether it’s UI (stick to spec) or illustration (free to scale) and name accordingly.
+Roman ruins: explore aqueducts for tech shards, collect mosaic, meditate for visions.
 
----
+Battlefields: scavenge scrap, tend wounded, loot siege engines, burn plague piles.
 
-## Endgame Paths (When Complete)  
-1. **Azure – Pax Romana**: escort the relic to the grand cathedral and secure high sanction.
-2. **Vert – Seed of Yggdrasil**: ally with a Norse skald to plant a holy oak on pagan soil.  
-3. **Or – House of Wisdom**: ferry four scholars to a distant library to spark a new renaissance.
-4. **Gules – The Red Cross**: raise a refugee banner and break a siege.  
-5. **Sable – The Black Plague**: venture into a quarantined city bearing a legendary cure—or join the darkness.  
-6. **Argent – Homecoming**: thread treacherous borders to lay the relic at a dying king’s bedside.
+Hidden pilgrim paths: pay fortune to worm-hole skip, hide entrance, trace runes.
 
-Each legend unveils organically through events; pursuing one closes others, forcing a strategic narrative choice.
+Crossroads encampments: rest free, read rumour board, gamble, visit swordsmith, patrol for ambush.
 
----
+Cathedral cities (hubs): grand market, unlimited crafting benches, audience with high clergy or emir, commission manuscripts, pray under stained glass.
 
-## The Promise  
-When finished, *Pilgrim Outbound* will be a pick-up-and-die-trying browser game:  
-clickable, readable, no installs, but deep enough that veterans will chase perfect runs, dissect seed patterns, and swap campfire stories of the one caravan that almost made it home.
+4 Art asset checklist (create in this order)
+parchment_tile.png – seamless 1024 × 1024 background.
 
-## Current Status
-- Title screen boots to a parchment world map
-- Travel preview and confirmation overlays show supply costs and modifiers
-- Travel limited to adjacent nodes with random encounter events
-- Locality overlays support depth-based resource harvesting
-- Running out of food or water brings up a death screen
-- Drag-and-drop inventory grid for looting
+europe_map.png – 1152 × 768 inked continent.
 
+Node icons: node_default, node_current, node_visited.
+
+marker.png (+ optional shadow).
+
+UI chrome: button plank, tooltip panel, modal frame.
+
+grid_cell.png – inventory tile.
+
+Starter item sprites – grain sack, waterskin, toolkit.
+
+Site-extraction tiles – grain field, woodpile, ore vein, fish net, scrap heap, mosaic shard.
+
+HUD rings – food, water.
+
+Twelve locality hero panels (one per node class).
+
+Encounter hero panels – one per story card.
+
+Six ending illustrations.
+
+(Any not finished should be referenced with the literal URL PASTE_URL_HERE.)
+
+Global style: hand-inked 1–3 px lines, muted earth palette plus lapis, vermilion, gold accents, parchment grain overlay 15%, dramatic single-source lighting, lonely and ominous.
+
+5 Project layout (zero build)
+index.html – loads ES modules.
+
+css/ – root styles.
+
+js/core/ – rng, ecs, scheduler, save.
+
+js/scenes/ – map, encounter, inventory.
+
+js/data/ – nodes.json, encounters.json, recipes.json.
+
+assets/images/ – all PNGs above.
+
+sw.js – optional offline stub.
+
+Run locally with python3 -m http.server and open http://localhost:8080.
+
+6 Open implementation tasks
+Bootstrap: title → seed prompt → map with state initialized and diary line.
+
+Travel: preview cost, consume meters, move marker, death on zero.
+
+Encounter modal: show art, text, three buttons, apply outcomes, diary write, fatal jumps.
+
+Locality & craft: site-depth harvesting, inventory drag-drop, crafting, repair, legend ending.
