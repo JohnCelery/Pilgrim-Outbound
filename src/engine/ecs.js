@@ -1,9 +1,12 @@
 export function createWorld() {
   let nextId = 1;
   const components = new Map(); // Map of component type -> Map<entity, data>
+  const entities = new Set(); // Track created entity ids
 
   function createEntity() {
-    return nextId++;
+    const id = nextId++;
+    entities.add(id);
+    return id;
   }
 
   function addComponent(id, type, data) {
@@ -13,6 +16,12 @@ export function createWorld() {
 
   function removeComponent(id, type) {
     components.get(type)?.delete(id);
+  }
+
+  function eachEntity(callback) {
+    for (const id of entities) {
+      callback(id);
+    }
   }
 
   function query(...types) {
@@ -34,5 +43,5 @@ export function createWorld() {
     return results;
   }
 
-  return { createEntity, addComponent, removeComponent, query };
+  return { createEntity, addComponent, removeComponent, query, eachEntity };
 }
