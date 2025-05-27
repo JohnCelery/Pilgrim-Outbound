@@ -11,6 +11,7 @@ import { createInventory } from './ui/inventory.js';
 import { createTitleScreen } from './ui/titleScreen.js';
 import { createResourceMenu } from './ui/resourceMenu.js';
 import { createHarvestMenu } from './ui/harvestMenu.js';
+import { createTravelConfirm } from './ui/travelConfirm.js';
 
 import {
   POSITION,
@@ -56,6 +57,7 @@ function startGame() {
   let inventory = null;
   let resources = null;
   let harvest = null;
+  let travelConfirm = null;
   let gameOver = false;
 
   const player = world.createEntity();
@@ -77,6 +79,7 @@ function startGame() {
   resources = createResourceMenu(world, player);
   resources.update();
   harvest = createHarvestMenu(world, player);
+  travelConfirm = createTravelConfirm();
 
   // A button to toggle the resource menu
   const resBtn = document.createElement('button');
@@ -118,7 +121,7 @@ function startGame() {
     }
   }
 
-  function travelTo(wp) {
+  function performTravel(wp) {
     console.log('Traveling to', wp.name);
 
     if (harvest) harvest.hide();
@@ -200,6 +203,11 @@ function startGame() {
 
     if (mapUI) mapUI.update();
     checkGameOver();
+  }
+
+  function travelTo(wp) {
+    if (travelConfirm) travelConfirm.show(wp, () => performTravel(wp));
+    else performTravel(wp);
   }
 
   loadMap(world).then(map => {
