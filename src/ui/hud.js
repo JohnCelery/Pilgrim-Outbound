@@ -1,5 +1,9 @@
 import { PROVISIONS, WATER } from '../components.js';
 
+// Placeholder icons for stats not yet backed by real assets
+const healthIcon = '❤';
+const staminaIcon = '⚡';
+
 const foodUrl =
   'https://cdn.glitch.global/813b10b4-5e9c-4e7c-9356-9c7f504e5ff1/grain_sack_1x1.png';
 const waterUrl =
@@ -27,6 +31,8 @@ export function createHud(world, playerId) {
     draw(ctx) {
       const prov = getComp(PROVISIONS) || { amount: 0 };
       const wat = getComp(WATER) || { amount: 0 };
+      const hp = getComp('health') || { amount: 100 };
+      const sta = getComp('stamina') || { amount: 100 };
 
       const iconSize = 32;
       ctx.imageSmoothingEnabled = false;
@@ -40,6 +46,18 @@ export function createHud(world, playerId) {
       // Water
       ctx.drawImage(waterImg, 10, 50, iconSize, iconSize);
       ctx.fillText(String(wat.amount), 10 + iconSize + 8, 50 + 24);
+
+      // Health
+      ctx.font = '24px sans-serif';
+      ctx.fillText(healthIcon, 10, 90 + 24);
+      ctx.font = '16px sans-serif';
+      ctx.fillText(String(hp.amount), 10 + iconSize + 8, 90 + 24);
+
+      // Stamina
+      ctx.font = '24px sans-serif';
+      ctx.fillText(staminaIcon, 10, 130 + 24);
+      ctx.font = '16px sans-serif';
+      ctx.fillText(String(sta.amount), 10 + iconSize + 8, 130 + 24);
     }
   };
 }
