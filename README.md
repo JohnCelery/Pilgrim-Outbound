@@ -1,2 +1,2 @@
 # Pilgrim-Outbound
-A 9th century roguelike 
+A 9th century roguelike , please enjoy.
