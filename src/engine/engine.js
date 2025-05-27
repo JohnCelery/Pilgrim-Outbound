@@ -11,7 +11,7 @@ export function initEngine(canvas) {
 
   function step(dt) {
     renderer.clear();
-    world.forEach(e => {
+    world.eachEntity(e => {
       // TODO: update and render each entity
     });
   }
