@@ -1,0 +1,25 @@
+export function createDeathScreen(onRestart) {
+  const overlay = document.createElement('div');
+  overlay.style.position = 'absolute';
+  overlay.style.left = '0';
+  overlay.style.top = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.background = "rgba(0,0,0,0.8) url('PASTE_URL_HERE') center/cover no-repeat";
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
+  overlay.style.justifyContent = 'center';
+  overlay.style.alignItems = 'center';
+  overlay.style.zIndex = '10000';
+
+  const btn = document.createElement('button');
+  btn.textContent = 'Restart';
+  btn.addEventListener('click', () => {
+    overlay.remove();
+    if (onRestart) onRestart();
+  });
+  overlay.appendChild(btn);
+
+  document.body.appendChild(overlay);
+  return { remove: () => overlay.remove() };
+}
