@@ -10,9 +10,13 @@ import {
   POSITION,
   PROVISIONS,
   WATER,
+  HEALTH,
+  STAMINA,
   addPosition,
   addProvisions,
-  addWater
+  addWater,
+  addHealth,
+  addStamina
 } from './components.js';
 import { createHud } from './ui/hud.js';
 
@@ -37,6 +41,8 @@ function boot() {
   addPosition(world, player, 0, 0);
   addProvisions(world, player, 10);
   addWater(world, player, 10);
+  addHealth(world, player, 10);
+  addStamina(world, player, 10);
   hud = createHud(world, player);
   inventory = createInventory();
 
