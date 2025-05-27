@@ -1,7 +1,7 @@
 import { modalFrame } from '../assets.js';
 import { PROVISIONS, WATER, GEAR, IRON, SILVER, WOOD, FORTUNE, FLAGS } from '../components.js';
 
-export function createLocationMenu(world, playerId, diaryFn = null) {
+export function createLocationMenu(world, playerId, diaryFn = null, inventory = null) {
   const overlay = document.createElement('div');
   overlay.style.position = 'absolute';
   overlay.style.left = '0';
@@ -60,6 +60,37 @@ export function createLocationMenu(world, playerId, diaryFn = null) {
     }
   }
 
+  const WATER_MAX = 140;
+  const GEAR_MAX = 100;
+
+  function promptDepth() {
+    let d = parseInt(prompt('Depth (1-3)?'), 10);
+    if (isNaN(d)) d = 1;
+    return Math.min(3, Math.max(1, d));
+  }
+
+  function tradeResources() {
+    const type = prompt('Trade for which resource? (food, water, iron)');
+    if (!RES[type]) return;
+    const silverRes = world.query(SILVER).find(r => r.id === playerId);
+    const maxSpend = silverRes ? silverRes.comps[0].amount : 0;
+    if (maxSpend <= 0) return;
+    let amt = parseInt(prompt(`Spend how many silver? (1-${maxSpend})`), 10);
+    if (isNaN(amt) || amt <= 0) return;
+    amt = Math.min(maxSpend, amt);
+    modify(SILVER, -amt);
+    modify(RES[type], amt * 2);
+  }
+
+  function gambleSilver(winAmt, loseAmt) {
+    if (Math.random() < 0.5) modify(SILVER, winAmt); else modify(SILVER, loseAmt);
+  }
+
+  function setResourceToMax(type, max) {
+    const res = world.query(type).find(r => r.id === playerId);
+    if (res) res.comps[0].amount = max;
+  }
+
   const RES = { food: PROVISIONS, water: WATER, gear: GEAR, iron: IRON, silver: SILVER, wood: WOOD, fortune: FORTUNE };
 
   function makeChoice(text, outcome, onComplete) {
@@ -68,6 +99,7 @@ export function createLocationMenu(world, playerId, diaryFn = null) {
     btn.style.display = 'block';
     btn.style.margin = '4px auto';
     btn.addEventListener('click', () => {
+      if (typeof outcome.action === 'function') outcome.action();
       for (const [k,v] of Object.entries(outcome.resources || {})) {
         const t = RES[k];
         if (t) modify(t, v);
@@ -87,121 +119,101 @@ export function createLocationMenu(world, playerId, diaryFn = null) {
     market: {
       hero: 'heroMarket',
       options: [
-        { text: 'Visit Market Stalls', diary: 'The stalls bustle with trade.' },
-        { text: 'Seek Specialist Services', diary: 'You find a skilled healer.' },
-        { text: 'Haggle with a Merchant', diary: 'A tense negotiation ensues.' },
-        { text: 'Pay the Tithe Cart', diary: 'You pay church dues.' },
-        { text: 'Skirt the Bazaar', diary: 'You avoid the crowds.' }
+        { text: 'Trade at Stalls', diary: 'Bartering for goods.', action: () => tradeResources() },
+        { text: 'Hire Healer', diary: 'A healer tends your kit.', resources: { silver: -10, gear: 30 } },
+        { text: 'Haggling Gamble', diary: 'You test your luck.', action: () => gambleSilver(10, -10) },
+        { text: 'Pay Tithe', diary: 'You pay church dues.', resources: { silver: -10 } }
       ]
     },
     monastery: {
       hero: 'heroMonastery',
       options: [
-        { text: 'Request Gear Repairs', diary: 'The monks tend your gear.' },
-        { text: 'Present the Leech-Book', diary: 'A healer treats your malaise.' },
-        { text: 'Study in the Scriptorium', diary: 'You pore over Latin texts.' },
-        { text: 'Join Vespers', diary: 'You rest among the chants.' },
-        { text: 'Steal from the Reliquary', diary: 'You risk wrath for relics.' }
+        { text: 'Repair Gear', diary: 'The monks mend your gear.', resources: { iron: -10, gear: 30 } },
+        { text: 'Herbal Cure', diary: 'Soothing tonics are shared.', resources: { silver: -5, water: 10, food: 10 } },
+        { text: 'Donate Grain', diary: 'You offer grain to the poor.', resources: { food: -15, water: 15 } },
+        { text: 'Rest in Cloister', diary: 'Quiet rest restores you.', resources: { food: -5, water: 5 } }
       ]
     },
     farmland: {
       hero: 'heroFarmland',
       options: [
-        { text: 'Harvest the Fields', diary: 'You gather grain.' },
-        { text: 'Trade with Peasants', diary: 'You barter for goods.' },
-        { text: 'Help With Harvest', diary: 'Labor earns goodwill.' },
-        { text: 'Stand Watch Against Bandits', diary: 'You guard the hamlet.' },
-        { text: 'Move On', diary: 'You soon depart.' }
+        { text: 'Harvest Fields', diary: 'You reap the crops.', action: () => { const d = promptDepth(); modify(GEAR, -5*d); modify(PROVISIONS, 20*d); } },
+        { text: 'Barter with Peasants', diary: 'Simple trade made.', resources: { iron: -10, food: 20 } },
+        { text: 'Guard Grain Stores', diary: 'You stand watch for coin.', resources: { water: -10, silver: 10 } }
       ]
     },
     forest: {
       hero: 'heroForest',
       options: [
-        { text: 'Gather Timber & Herbs', diary: 'You forage quietly.' },
-        { text: 'Hunt Game', diary: 'You track wild beasts.' },
-        { text: 'Search for Secret Path', diary: 'You seek hidden trails.' },
-        { text: 'Track the Clockwork Stag', diary: 'A mechanical stag eludes you.' },
-        { text: 'Break Camp Quietly', diary: 'You slip away unseen.' }
+        { text: 'Gather Timber', diary: 'You chop usable wood.', action: () => { const d = promptDepth(); modify(GEAR, -5*d); modify(WOOD, 15*d); } },
+        { text: 'Hunt Game', diary: 'Fresh meat acquired.', resources: { water: -5, food: 25 } },
+        { text: 'Collect Herbs', diary: 'You gather fragrant herbs.', resources: { gear: -5, food: 10, water: 10 } }
       ]
     },
     mountain: {
       hero: 'heroMountain',
       options: [
-        { text: 'Mine the Scree', diary: 'You chip at the rocks.' },
-        { text: 'Scavenge Roman Debris', diary: 'Rusty relics litter the pass.' },
-        { text: 'Light a Signal Fire', diary: 'Smoke curls into the sky.' },
-        { text: 'Shelter in a Crevice', diary: 'You wait out the cold night.' },
-        { text: 'Descend Immediately', diary: 'You hurry on your way.' }
+        { text: 'Mine Ore', diary: 'You pry loose veins.', action: () => { const d = promptDepth(); modify(GEAR, -5*d); modify(IRON, 15*d); } },
+        { text: 'Break Stone for Road', diary: 'You hew heavy blocks.', resources: { food: -10, iron: 20 } },
+        { text: 'Clear Snow Cave', diary: 'Shelter yields supplies.', resources: { gear: -15, food: 10, water: 20 } }
       ]
     },
     river: {
       hero: 'heroRiver',
       options: [
-        { text: 'Refill Waterskins', diary: 'Cool water refreshes you.' },
-        { text: 'Fish the Shallows', diary: 'You cast lines into the eddy.' },
-        { text: 'Hire the Ferry', diary: 'A ferryman hastens your travel.' },
-        { text: 'Inspect the Singing Chains', diary: 'Strange echoes ring out.' },
-        { text: 'Cross Without Delay', diary: 'You ford the river quickly.' }
+        { text: 'Refill Waterskins', diary: 'Your skins brim once more.', action: () => setResourceToMax(WATER, WATER_MAX) },
+        { text: 'Fish Shallows', diary: 'The nets are heavy.', resources: { water: -10, food: 25 } },
+        { text: 'Pay Ferry Shortcut', diary: 'You cross swiftly.', resources: { silver: -5 }, setFlags: ['ferry_discount'] },
+        { text: 'Mend Nets for Locals', diary: 'Grateful folk pay you.', resources: { food: -10, silver: 10 } }
       ]
     },
     port: {
       hero: 'heroPort',
       options: [
-        { text: 'Browse Exotic Traders', diary: 'Silks and spices tempt you.' },
-        { text: 'Book Passage', diary: 'You secure a berth on a ship.' },
-        { text: 'Gossip at the Dockside', diary: 'Sailors trade stories.' },
-        { text: 'Barter With Longship Raiders', diary: 'Tense barter with raiders.' },
-        { text: 'Leave the Pier', diary: 'You depart the port.' }
+        { text: 'Buy Exotic Cargo', diary: 'Rare goods loaded.', action: () => { modify(SILVER, -10); inventory && inventory.addItem('silk_bundle'); } },
+        { text: 'Book Sea Passage', diary: 'Voyage arranged.', resources: { silver: -10 }, setFlags: ['sea_passage_discount'] },
+        { text: 'Sell Dried Fish', diary: 'Local cooks pay well.', resources: { food: -30, silver: 15 } },
+        { text: 'Help Unload Barrels', diary: 'Heavy labour earns iron.', resources: { water: -10, iron: 10 } }
       ]
     },
     ruin: {
       hero: 'heroRuin',
       options: [
-        { text: 'Explore the Aqueduct', diary: 'You pick through fallen stone.' },
-        { text: 'Collect Mosaic Tesserae', diary: 'Colored shards fill your pack.' },
-        { text: 'Meditate in the Hypocaust', diary: 'Whispers of the past stir.' },
-        { text: 'Chisel Bronze Valve', diary: 'Old mechanisms resist.' },
-        { text: 'Back Away Respectfully', diary: 'You keep your distance.' }
+        { text: 'Scavenge Valves', diary: 'Ancient metal recovered.', action: () => { const d = promptDepth(); modify(GEAR, -5*d); modify(IRON, 10*d); modify(WATER, 10); } },
+        { text: 'Collect Mosaic Pieces', diary: 'Colorful stones gathered.', resources: { gear: -5, iron: 20 } },
+        { text: 'Draw Water from Cistern', diary: 'Cool depths refresh.', resources: { food: -5, water: 40 } }
       ]
     },
     battlefield: {
       hero: 'heroBattlefield',
       options: [
-        { text: 'Scavenge the Wreckage', diary: 'The dead yield grim bounty.' },
-        { text: 'Tend the Wounded', diary: 'You aid the fallen.' },
-        { text: 'Search the Siege Engine', diary: 'Siege debris hides loot.' },
-        { text: 'Burn the Plague Piles', diary: 'Smoke clears the pestilence.' },
-        { text: 'Ride Through Quickly', diary: 'You spur past the carnage.' }
+        { text: 'Scrounge Scrap', diary: 'You sift the ruins.', action: () => { const d = promptDepth(); modify(GEAR, -5*d); modify(IRON, 10*d); modify(SILVER, 5*d); } },
+        { text: 'Strip Armour', diary: 'Useful plates salvaged.', resources: { water: -20, iron: 40 } },
+        { text: 'Bury Bodies for Loot', diary: 'Morbid work yields coin.', resources: { food: -15, silver: 25 } }
       ]
     },
     hiddenPath: {
       hero: 'heroHiddenPath',
       options: [
-        { text: 'Follow the Marked Shells', diary: 'A secret trail unfolds.' },
-        { text: 'Hide the Path Entrance', diary: 'You conceal your track.' },
-        { text: 'Trace the Runes', diary: 'Mystic runes glitter faintly.' },
-        { text: 'Set Up Camp', diary: 'A quiet haven for the night.' },
-        { text: 'Turn Back', diary: 'Doubts halt your progress.' }
+        { text: 'Pay Guide', diary: 'The guide shows a quicker way.', resources: { fortune: -1 }, setFlags: ['skip_path'] },
+        { text: 'Forage Wild Berries', diary: 'Bushes offer sustenance.', resources: { gear: -5, food: 20, water: 10 } }
       ]
     },
     encampment: {
       hero: 'heroEncampment',
       options: [
-        { text: 'Rest by the Fire', diary: 'Warmth seeps into your bones.' },
-        { text: 'Consult Rumour Board', diary: 'You hear many whispers.' },
-        { text: 'Join a Dice Game', diary: 'Luck dances with the bones.' },
-        { text: 'Visit Swordsmith Tent', diary: 'Blades gleam under the hammer.' },
-        { text: 'Patrol for Ambushers', diary: 'You scout the perimeter.' }
+        { text: 'Rest by Fire', diary: 'The flames ease your burden.', resources: { water: 5 }, setFlags: ['no_drain'] },
+        { text: 'Gamble at Dice', diary: 'The cup rattles.', action: () => gambleSilver(15, -10) },
+        { text: 'Sharpen Weapons', diary: 'Edges honed keen.', resources: { iron: -10, gear: 20 } }
       ]
     },
     cathedral: {
       hero: 'heroCathedral',
       options: [
-        { text: 'Enter Grand Market', diary: 'Merchants shout their prices.' },
-        { text: 'Use the Craft Halls', diary: 'Forge fires roar.' },
-        { text: 'Audience with High Cleric', diary: 'You kneel before high ranks.' },
-        { text: 'Commission a Manuscript', diary: 'Scribes set quills to parchment.' },
-        { text: 'Pray beneath the Vault', diary: 'Echoing hymns calm your soul.' }
+        { text: 'Grand Market Trade', diary: 'Coins change many hands.', action: () => tradeResources() },
+        { text: 'Commission Repair', diary: 'Craftsmen restore all gear.', action: () => { modify(SILVER, -20); setResourceToMax(GEAR, GEAR_MAX); } },
+        { text: 'Feast in Refectory', diary: 'Tables groan with bounty.', resources: { silver: -10, food: 40, water: 40 } },
+        { text: 'Donate Alms', diary: 'Your charity is noted.', resources: { silver: -15, fortune: 1 } }
       ]
     }
   };

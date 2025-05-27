@@ -37,6 +37,7 @@ export const gridCell = 'PASTE_URL_HERE';
 export const grainSack = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-9e387411d153/ChatGPT%20Image%20May%2027%2C%202025%2C%2009_29_24%20AM.png?v=1748367026388';
 export const waterskin = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-9e387411d153/ChatGPT%20Image%20May%2027%2C%202025%2C%2009_31_06%20AM.png?v=1748367028535';
 export const toolkit = 'https://cdn.glitch.global/926b1852-0bd6-415e-8777-9e387411d153/ChatGPT%20Image%20May%2027%2C%202025%2C%2009_36_49%20AM.png?v=1748367030270';
+export const silkBundle = 'PASTE_URL_HERE';
 
 export const grainFieldTile = 'PASTE_URL_HERE';
 export const forestWoodTile = 'PASTE_URL_HERE';
