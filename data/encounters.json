@@ -8,24 +8,38 @@
         {
           "option": "Help finish the lettering",
           "outcome": {
-            "resources": {"water": -5, "fortune": 1},
-            "setFlags": ["word_rex"],
+            "resources": {
+              "water": -5,
+              "fortune": 1
+            },
+            "setFlags": [
+              "word_rex"
+            ],
             "diary": "Gold leaf catches the dying sun."
           }
         },
         {
           "option": "Offer provisions for the page",
           "outcome": {
-            "resources": {"food": -10},
-            "setFlags": ["relic_scrap"],
+            "resources": {
+              "food": -10
+            },
+            "setFlags": [
+              "relic_scrap"
+            ],
             "diary": "The monk gratefully hands you a relic scrap."
           }
         },
         {
           "option": "Steal the vellum after the monk sleeps",
           "outcome": {
-            "resources": {"gear": -10},
-            "setFlags": ["relic_scrap", "monastic_wrath"],
+            "resources": {
+              "gear": -10
+            },
+            "setFlags": [
+              "relic_scrap",
+              "monastic_wrath"
+            ],
             "diary": "The stairs collapse as you flee with the vellum."
           }
         }
@@ -39,9 +53,14 @@
         {
           "option": "Join the chant",
           "outcome": {
-            "resources": {"water": 10},
-            "setFlags": ["nordic_friendly", "word_brodir"],
-            "diary": "You melt snow for broth as the chant echoes." 
+            "resources": {
+              "water": 10
+            },
+            "setFlags": [
+              "nordic_friendly",
+              "word_brodir"
+            ],
+            "diary": "You melt snow for broth as the chant echoes."
           }
         },
         {
@@ -50,13 +69,19 @@
             "random": {
               "chance": 0.5,
               "success": {
-                "resources": {"fortune": 1},
-                "setFlags": ["frost_sword"],
-                "diary": "You surface clutching a frost runed blade." 
+                "resources": {
+                  "fortune": 1
+                },
+                "setFlags": [
+                  "frost_sword"
+                ],
+                "diary": "You surface clutching a frost runed blade."
               },
               "fail": {
-                "resources": {"gear": -20},
-                "diary": "Icy water saps your strength." 
+                "resources": {
+                  "gear": -20
+                },
+                "diary": "Icy water saps your strength."
               }
             }
           }
@@ -64,8 +89,10 @@
         {
           "option": "Quietly depart",
           "outcome": {
-            "clearFlags": ["nordic_friendly"],
-            "diary": "You leave the ceremony behind." 
+            "clearFlags": [
+              "nordic_friendly"
+            ],
+            "diary": "You leave the ceremony behind."
           }
         }
       ]
@@ -78,24 +105,34 @@
         {
           "option": "Lend your toolkit",
           "outcome": {
-            "resources": {"gear": -5},
-            "setFlags": ["recipe_hydraulic_pump"],
-            "diary": "The engineer sketches a hydraulic pump." 
+            "resources": {
+              "gear": -5
+            },
+            "setFlags": [
+              "recipe_hydraulic_pump"
+            ],
+            "diary": "The engineer sketches a hydraulic pump."
           }
         },
         {
           "option": "Ask him to mend your waterskin",
           "outcome": {
-            "resources": {"water": 15},
-            "diary": "Your waterskin holds more than before." 
+            "resources": {
+              "water": 15
+            },
+            "diary": "Your waterskin holds more than before."
           }
         },
         {
           "option": "Scavenge fallen iron clamps",
           "outcome": {
-            "resources": {"iron": 25},
-            "setFlags": ["umayyad_resent"],
-            "diary": "You pry loose rusted clamps, drawing resentful eyes." 
+            "resources": {
+              "iron": 25
+            },
+            "setFlags": [
+              "umayyad_resent"
+            ],
+            "diary": "You pry loose rusted clamps, drawing resentful eyes."
           }
         }
       ]
@@ -109,9 +146,13 @@
         {
           "option": "Feed the dog",
           "outcome": {
-            "resources": {"food": -5},
-            "setFlags": ["dog_companion"],
-            "diary": "The dog falls in beside you." 
+            "resources": {
+              "food": -5
+            },
+            "setFlags": [
+              "dog_companion"
+            ],
+            "diary": "The dog falls in beside you."
           }
         },
         {
@@ -119,16 +160,28 @@
           "outcome": {
             "random": {
               "chance": 0.5,
-              "success": {"setFlags": ["odin_warning"], "diary": "Odin's voice whispers caution."},
-              "fail": {"resources": {"fortune": -1}, "diary": "A dark omen chills your bones."}
+              "success": {
+                "setFlags": [
+                  "odin_warning"
+                ],
+                "diary": "Odin's voice whispers caution."
+              },
+              "fail": {
+                "resources": {
+                  "fortune": -1
+                },
+                "diary": "A dark omen chills your bones."
+              }
             }
           }
         },
         {
           "option": "Ignore and pray",
           "outcome": {
-            "setFlags": ["faith_thumb"],
-            "diary": "You whisper a humble prayer." 
+            "setFlags": [
+              "faith_thumb"
+            ],
+            "diary": "You whisper a humble prayer."
           }
         }
       ]
@@ -141,28 +194,47 @@
         {
           "option": "Pay him",
           "outcome": {
-            "resources": {"iron": -10, "fortune": 1},
-            "clearFlags": ["plague_malaise"],
-            "diary": "Mercy buys you a blessing." 
+            "resources": {
+              "iron": -10,
+              "fortune": 1
+            },
+            "clearFlags": [
+              "plague_malaise"
+            ],
+            "diary": "Mercy buys you a blessing."
           }
         },
         {
           "option": "Search the cart",
           "outcome": {
-            "resources": {"silver": 20},
+            "resources": {
+              "silver": 20
+            },
             "random": {
               "chance": 0.25,
-              "success": {"setFlags": ["plague_malaise"], "diary": "You cough in the rising dust."},
-              "fail": {"diary": "You find only tarnished coins."}
+              "success": {
+                "setFlags": [
+                  "plague_malaise"
+                ],
+                "diary": "You cough in the rising dust."
+              },
+              "fail": {
+                "diary": "You find only tarnished coins."
+              }
             }
           }
         },
         {
           "option": "Help bury the dead",
           "outcome": {
-            "resources": {"water": -10, "gear": -10},
-            "setFlags": ["grace_token"],
-            "diary": "The doctor thanks you for your grace." 
+            "resources": {
+              "water": -10,
+              "gear": -10
+            },
+            "setFlags": [
+              "grace_token"
+            ],
+            "diary": "The doctor thanks you for your grace."
           }
         }
       ]
@@ -177,24 +249,41 @@
           "outcome": {
             "random": {
               "chance": 0.9,
-              "success": {"resources": {"water": 50}, "diary": "Your barrels brim with crystal water."},
-              "fail": {"resources": {"gear": -25}, "diary": "A cave-in smashes your gear."}
+              "success": {
+                "resources": {
+                  "water": 50
+                },
+                "diary": "Your barrels brim with crystal water."
+              },
+              "fail": {
+                "resources": {
+                  "gear": -25
+                },
+                "diary": "A cave-in smashes your gear."
+              }
             }
           }
         },
         {
           "option": "Extract a crystal valve",
           "outcome": {
-            "resources": {"water": -20},
-            "setFlags": ["roman_tech_shard"],
-            "diary": "A shard of Roman tech glints in your hand." 
+            "resources": {
+              "water": -20
+            },
+            "setFlags": [
+              "roman_tech_shard"
+            ],
+            "diary": "A shard of Roman tech glints in your hand."
           }
         },
         {
           "option": "Meditate before the mosaic",
           "outcome": {
-            "setFlags": ["coord_azure", "word_lux"],
-            "diary": "Visions of a distant path flood your mind." 
+            "setFlags": [
+              "coord_azure",
+              "word_lux"
+            ],
+            "diary": "Visions of a distant path flood your mind."
           }
         }
       ]
@@ -209,24 +298,40 @@
           "outcome": {
             "random": {
               "chance": 0.6,
-              "success": {"resources": {"fortune": 1}, "diary": "The kite reveals hidden roads."},
-              "fail": {"resources": {"gear": -15}, "diary": "The wind drags you over rocks."}
+              "success": {
+                "resources": {
+                  "fortune": 1
+                },
+                "diary": "The kite reveals hidden roads."
+              },
+              "fail": {
+                "resources": {
+                  "gear": -15
+                },
+                "diary": "The wind drags you over rocks."
+              }
             }
           }
         },
         {
           "option": "Buy the silk",
           "outcome": {
-            "resources": {"silver": -20},
-            "setFlags": ["module_silk_sail"],
-            "diary": "You pack the shimmering silk." 
+            "resources": {
+              "silver": -20
+            },
+            "setFlags": [
+              "module_silk_sail"
+            ],
+            "diary": "You pack the shimmering silk."
           }
         },
         {
           "option": "Ride on and report",
           "outcome": {
-            "setFlags": ["carolingian_favor"],
-            "diary": "Your report earns quiet gratitude." 
+            "setFlags": [
+              "carolingian_favor"
+            ],
+            "diary": "Your report earns quiet gratitude."
           }
         }
       ]
@@ -239,8 +344,11 @@
         {
           "option": "Add your own prayer",
           "outcome": {
-            "resources": {"fortune": -1, "food": 20},
-            "diary": "Villagers leave food in thanks." 
+            "resources": {
+              "fortune": -1,
+              "food": 20
+            },
+            "diary": "Villagers leave food in thanks."
           }
         },
         {
@@ -248,17 +356,31 @@
           "outcome": {
             "random": {
               "chance": 0.5,
-              "success": {"setFlags": ["word_miserere"], "diary": "A new word settles on your tongue."},
-              "fail": {"setFlags": ["bandit_ambush"], "diary": "Leaves rustle with hidden danger."}
+              "success": {
+                "setFlags": [
+                  "word_miserere"
+                ],
+                "diary": "A new word settles on your tongue."
+              },
+              "fail": {
+                "setFlags": [
+                  "bandit_ambush"
+                ],
+                "diary": "Leaves rustle with hidden danger."
+              }
             }
           }
         },
         {
           "option": "Harvest resin",
           "outcome": {
-            "resources": {"wood": 15},
-            "setFlags": ["village_resent"],
-            "diary": "Sticky resin coats your hands." 
+            "resources": {
+              "wood": 15
+            },
+            "setFlags": [
+              "village_resent"
+            ],
+            "diary": "Sticky resin coats your hands."
           }
         }
       ]
@@ -271,23 +393,33 @@
         {
           "option": "Repair overnight",
           "outcome": {
-            "resources": {"food": -10, "gear": -5},
-            "setFlags": ["working_astrolabe"],
-            "diary": "Gears click as the astrolabe whirs." 
+            "resources": {
+              "food": -10,
+              "gear": -5
+            },
+            "setFlags": [
+              "working_astrolabe"
+            ],
+            "diary": "Gears click as the astrolabe whirs."
           }
         },
         {
           "option": "Melt for metal",
           "outcome": {
-            "resources": {"copper": 25, "gear": -5},
-            "diary": "Molten brass pools at your feet." 
+            "resources": {
+              "copper": 25,
+              "gear": -5
+            },
+            "diary": "Molten brass pools at your feet."
           }
         },
         {
           "option": "Mark for later",
           "outcome": {
-            "setFlags": ["astrolabe_cache"],
-            "diary": "You note the stars for a return." 
+            "setFlags": [
+              "astrolabe_cache"
+            ],
+            "diary": "You note the stars for a return."
           }
         }
       ]
@@ -300,24 +432,36 @@
         {
           "option": "Take white feather",
           "outcome": {
-            "resources": {"gear": 100, "water": 5},
-            "setFlags": ["mercy"],
-            "diary": "A calm strength fills your limbs." 
+            "resources": {
+              "gear": 100,
+              "water": 5
+            },
+            "setFlags": [
+              "mercy"
+            ],
+            "diary": "A calm strength fills your limbs."
           }
         },
         {
           "option": "Take black feather",
           "outcome": {
-            "resources": {"fortune": 1, "iron": 20},
-            "setFlags": ["blood_oath"],
-            "diary": "Dark resolve steels your heart." 
+            "resources": {
+              "fortune": 1,
+              "iron": 20
+            },
+            "setFlags": [
+              "blood_oath"
+            ],
+            "diary": "Dark resolve steels your heart."
           }
         },
         {
           "option": "Refuse and bow",
           "outcome": {
-            "setFlags": ["coord_sable"],
-            "diary": "The valkyrie nods toward distant shadows." 
+            "setFlags": [
+              "coord_sable"
+            ],
+            "diary": "The valkyrie nods toward distant shadows."
           }
         }
       ]
@@ -330,24 +474,37 @@
         {
           "option": "Cup some water and clean the mirror",
           "outcome": {
-            "resources": {"water": -5, "fortune": 1},
-            "setFlags": ["star_visions"],
+            "resources": {
+              "water": -5,
+              "fortune": 1
+            },
+            "setFlags": [
+              "star_visions"
+            ],
             "diary": "The surface reveals a wrong star-map."
           }
         },
         {
           "option": "Pocket the bronze for trade",
           "outcome": {
-            "resources": {"silver": 25},
-            "setFlags": ["marsh_curse"],
+            "resources": {
+              "silver": 25
+            },
+            "setFlags": [
+              "marsh_curse"
+            ],
             "diary": "You feel a damp chill cling to you."
           }
         },
         {
           "option": "Gaze at your reflection until dawn",
           "outcome": {
-            "resources": {"food": -10},
-            "setFlags": ["coord_vert"],
+            "resources": {
+              "food": -10
+            },
+            "setFlags": [
+              "coord_vert"
+            ],
             "diary": "Dawn breaks with secrets of Vert."
           }
         }
@@ -361,8 +518,12 @@
         {
           "option": "Blow a short hymn",
           "outcome": {
-            "resources": {"wood": 10},
-            "setFlags": ["word_gloria"],
+            "resources": {
+              "wood": 10
+            },
+            "setFlags": [
+              "word_gloria"
+            ],
             "diary": "Echoes dislodge old choir stalls."
           }
         },
@@ -371,8 +532,19 @@
           "outcome": {
             "random": {
               "chance": 0.5,
-              "success": {"setFlags": ["nordic_friendly"], "resources": {"fortune": 1}},
-              "fail": {"resources": {"fortune": -1}}
+              "success": {
+                "setFlags": [
+                  "nordic_friendly"
+                ],
+                "resources": {
+                  "fortune": 1
+                }
+              },
+              "fail": {
+                "resources": {
+                  "fortune": -1
+                }
+              }
             },
             "diary": "Your breath resounds among the statues."
           }
@@ -380,8 +552,13 @@
         {
           "option": "Smash a pipe free for scrap",
           "outcome": {
-            "resources": {"copper": 20, "gear": -15},
-            "setFlags": ["choir_haunted"],
+            "resources": {
+              "copper": 20,
+              "gear": -15
+            },
+            "setFlags": [
+              "choir_haunted"
+            ],
             "diary": "Stone collapses with a ghostly sigh."
           }
         }
@@ -395,17 +572,27 @@
         {
           "option": "Confess your mission aloud",
           "outcome": {
-            "resources": {"fortune": -1},
-            "setFlags": ["reveal_two_nodes"],
+            "resources": {
+              "fortune": -1
+            },
+            "setFlags": [
+              "reveal_two_nodes"
+            ],
             "diary": "The falcon soars with your confession."
           }
         },
         {
           "option": "Trade a relic scrap as a 'secret'",
           "outcome": {
-            "setFlags": ["patrol_maps"],
-            "resources": {"food": 10},
-            "clearFlags": ["relic_scrap"],
+            "setFlags": [
+              "patrol_maps"
+            ],
+            "resources": {
+              "food": 10
+            },
+            "clearFlags": [
+              "relic_scrap"
+            ],
             "diary": "He rewards you with field provisions."
           }
         },
@@ -414,8 +601,16 @@
           "outcome": {
             "random": {
               "chance": 0.5,
-              "success": {"resources": {"silver": 20}},
-              "fail": {"setFlags": ["falconer_spite"]}
+              "success": {
+                "resources": {
+                  "silver": 20
+                }
+              },
+              "fail": {
+                "setFlags": [
+                  "falconer_spite"
+                ]
+              }
             },
             "diary": "The falcon watches you intently."
           }
@@ -430,18 +625,28 @@
         {
           "option": "Browse celestial scrolls",
           "outcome": {
-            "resources": {"water": -10},
-            "setFlags": ["recipe_star_lens"],
+            "resources": {
+              "water": -10
+            },
+            "setFlags": [
+              "recipe_star_lens"
+            ],
             "diary": "Hours pass under shifting constellations."
           }
         },
         {
           "option": "Collect mirror shards",
           "outcome": {
-            "resources": {"roman_tech_shard": 1},
+            "resources": {
+              "roman_tech_shard": 1
+            },
             "random": {
               "chance": 0.25,
-              "fail": {"resources": {"gear": -20}}
+              "fail": {
+                "resources": {
+                  "gear": -20
+                }
+              }
             },
             "diary": "Sharp edges glitter in your pack."
           }
@@ -449,8 +654,12 @@
         {
           "option": "Light a fire and scorch the place",
           "outcome": {
-            "resources": {"wood": 15},
-            "setFlags": ["carolingian_favor"],
+            "resources": {
+              "wood": 15
+            },
+            "setFlags": [
+              "carolingian_favor"
+            ],
             "diary": "Smoke curls as heresy burns."
           }
         }
@@ -464,24 +673,36 @@
         {
           "option": "Cross while humming along",
           "outcome": {
-            "resources": {"gear": -10},
-            "setFlags": ["chain_resonance"],
+            "resources": {
+              "gear": -10
+            },
+            "setFlags": [
+              "chain_resonance"
+            ],
             "diary": "The vibrations settle into your bones."
           }
         },
         {
           "option": "Carve your own name into the deck",
           "outcome": {
-            "resources": {"fortune": 1},
-            "setFlags": ["marked_by_prophecy"],
+            "resources": {
+              "fortune": 1
+            },
+            "setFlags": [
+              "marked_by_prophecy"
+            ],
             "diary": "Your name sings with the bridge."
           }
         },
         {
           "option": "Harvest a chain segment",
           "outcome": {
-            "resources": {"iron": 25},
-            "setFlags": ["bridge_unstable"],
+            "resources": {
+              "iron": 25
+            },
+            "setFlags": [
+              "bridge_unstable"
+            ],
             "diary": "Metal groans as you pry it loose."
           }
         }
@@ -495,22 +716,32 @@
         {
           "option": "Add a Carolingian cross",
           "outcome": {
-            "setFlags": ["cross_over_rune"],
+            "setFlags": [
+              "cross_over_rune"
+            ],
             "diary": "Your mark angers the sea breeze."
           }
         },
         {
           "option": "Etch Odin's mark deeper",
           "outcome": {
-            "resources": {"iron": 10},
-            "setFlags": ["odin_mark"]
+            "resources": {
+              "iron": 10
+            },
+            "setFlags": [
+              "odin_mark"
+            ]
           }
         },
         {
           "option": "Trace the hidden numerals for study",
           "outcome": {
-            "resources": {"water": -5},
-            "setFlags": ["word_sifr"],
+            "resources": {
+              "water": -5
+            },
+            "setFlags": [
+              "word_sifr"
+            ],
             "diary": "You decipher intriguing decimals."
           }
         }
@@ -526,7 +757,11 @@
           "outcome": {
             "random": {
               "chance": 0.5,
-              "success": {"resources": {"food": 20}},
+              "success": {
+                "resources": {
+                  "food": 20
+                }
+              },
               "fail": {}
             },
             "diary": "The stag's gears whirr softly."
@@ -536,16 +771,24 @@
           "option": "Fire an arrow to bring it down",
           "outcome": {
             "requiresFlag": "bow",
-            "resources": {"roman_tech_shard": 1},
-            "setFlags": ["forest_spooked"],
+            "resources": {
+              "roman_tech_shard": 1
+            },
+            "setFlags": [
+              "forest_spooked"
+            ],
             "diary": "Metal parts scatter into the brush."
           }
         },
         {
           "option": "Shadow the stag for an hour",
           "outcome": {
-            "resources": {"food": -5},
-            "setFlags": ["forest_shortcut"],
+            "resources": {
+              "food": -5
+            },
+            "setFlags": [
+              "forest_shortcut"
+            ],
             "diary": "It leads you to a hidden path."
           }
         }
@@ -559,22 +802,33 @@
         {
           "option": "Tap sap into vials",
           "outcome": {
-            "resources": {"fortune": 1, "gear": -10},
+            "resources": {
+              "fortune": 1,
+              "gear": -10
+            },
             "diary": "Sticky sap coats your hands."
           }
         },
         {
           "option": "Ask for guidance to distant shrine",
           "outcome": {
-            "resources": {"food": -10},
-            "setFlags": ["coord_or"]
+            "resources": {
+              "food": -10
+            },
+            "setFlags": [
+              "coord_or"
+            ]
           }
         },
         {
           "option": "Offer to prune diseased limbs",
           "outcome": {
-            "resources": {"wood": 20},
-            "setFlags": ["plague_blessing"],
+            "resources": {
+              "wood": 20
+            },
+            "setFlags": [
+              "plague_blessing"
+            ],
             "diary": "Her blessing wards off sickness."
           }
         }
@@ -588,22 +842,32 @@
         {
           "option": "Speak your true name",
           "outcome": {
-            "setFlags": ["echo_bound", "word_random"],
+            "setFlags": [
+              "echo_bound",
+              "word_random"
+            ],
             "diary": "The chamber repeats you thrice over."
           }
         },
         {
           "option": "Shout a battle cry",
           "outcome": {
-            "resources": {"gear_max_temp": 10, "water": -5},
+            "resources": {
+              "gear_max_temp": 10,
+              "water": -5
+            },
             "diary": "Your voice booms in alien tongues."
           }
         },
         {
           "option": "Chip marble for sale",
           "outcome": {
-            "resources": {"silver": 20},
-            "setFlags": ["echo_chamber_ruined"],
+            "resources": {
+              "silver": 20
+            },
+            "setFlags": [
+              "echo_chamber_ruined"
+            ],
             "diary": "Fragments clatter at your feet."
           }
         }
@@ -617,24 +881,72 @@
         {
           "option": "Turn the vane to North as asked",
           "outcome": {
-            "resources": {"fortune": 1},
-            "setFlags": ["north_wind_favor"],
+            "resources": {
+              "fortune": 1
+            },
+            "setFlags": [
+              "north_wind_favor"
+            ],
             "diary": "A calm hush follows the turning."
           }
         },
         {
           "option": "Ask the child what it seeks",
           "outcome": {
-            "setFlags": ["coord_argent", "word_ventus"],
+            "setFlags": [
+              "coord_argent",
+              "word_ventus"
+            ],
             "diary": "The child fades with a whisper."
           }
         },
         {
           "option": "Climb up to steal the vane",
           "outcome": {
-            "resources": {"copper": 25, "gear": -20},
-            "setFlags": ["ghost_vengeful"],
+            "resources": {
+              "copper": 25,
+              "gear": -20
+            },
+            "setFlags": [
+              "ghost_vengeful"
+            ],
             "diary": "You slip but keep hold of the vane."
+          }
+        }
+      ]
+    },
+    {
+      "id": "hermit_water_barter",
+      "weight": 5,
+      "text": "A sun-leaned hermit emerges from a rocky hollow, offering cool jars of water to travellers willing to trade spare gear.",
+      "options": [
+        {
+          "option": "Trade some gear for water",
+          "outcome": {
+            "resources": {
+              "water": 15,
+              "gear": -10
+            },
+            "diary": "The hermit blesses your path."
+          }
+        },
+        {
+          "option": "Thank him and decline",
+          "outcome": {
+            "diary": "He nods, drinking deeply from one jar."
+          }
+        },
+        {
+          "option": "Steal a jar while he prays",
+          "outcome": {
+            "resources": {
+              "water": 5,
+              "fortune": -1
+            },
+            "setFlags": [
+              "hermit_resentful"
+            ],
+            "diary": "You flee with water as the hermit curses."
           }
         }
       ]

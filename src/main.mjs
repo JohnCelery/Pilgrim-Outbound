@@ -10,10 +10,13 @@ import { createInventory } from './ui/inventory.js';
 // Keep both imports:
 import { createTitleScreen } from './ui/titleScreen.js';
 import { createResourceMenu } from './ui/resourceMenu.js';
+import { createHarvestMenu } from './ui/harvestMenu.js';
 
 import {
   POSITION,
   PROVISIONS,
+  HEALTH,
+  STAMINA,
   WATER,
   GEAR,
   IRON,
@@ -24,6 +27,8 @@ import {
   addPosition,
   addProvisions,
   addWater,
+  addHealth,
+  addStamina,
   addGear,
   addIron,
   addSilver,
@@ -51,12 +56,15 @@ function startGame() {
   let eventsData = null;
   let inventory = null;
   let resources = null;
+  let harvest = null;
   let gameOver = false;
 
   const player = world.createEntity();
   addPosition(world, player, 0, 0);
   addProvisions(world, player, 10);
   addWater(world, player, 10);
+  addHealth(world, player, 100);
+  addStamina(world, player, 100);
   addGear(world, player, 10);
   addIron(world, player, 0);
   addSilver(world, player, 0);
@@ -66,9 +74,11 @@ function startGame() {
 
   hud = createHud(world, player);
   inventory = createInventory();
+  inventory.hide();
   resources = createResourceMenu(world, player);
   resources.update();
 
+  harvest = createHarvestMenu(world, player, () => resources.update());
   // A button to toggle the resource menu
   const resBtn = document.createElement('button');
   resBtn.textContent = 'Resources';
@@ -78,6 +88,16 @@ function startGame() {
   resBtn.style.zIndex = '6';
   resBtn.addEventListener('click', () => resources.toggle());
   document.body.appendChild(resBtn);
+
+  // Button to toggle the inventory
+  const invBtn = document.createElement('button');
+  invBtn.textContent = 'Inventory';
+  invBtn.style.position = 'absolute';
+  invBtn.style.left = '10px';
+  invBtn.style.top = '160px';
+  invBtn.style.zIndex = '6';
+  invBtn.addEventListener('click', () => inventory.toggle());
+  document.body.appendChild(invBtn);
 
   const diary = createDiary();
 
@@ -126,6 +146,11 @@ function startGame() {
       pos.y = y;
     }
 
+    if (wp.name === 'Rome') {
+      alert('Victory! You reached Rome.');
+      if (mapUI) mapUI.disable();
+    }
+
     // Mark waypoint as visited, then update current waypoint info
     wp.visited = true;
     currentWaypoint = wp.name;
@@ -134,6 +159,14 @@ function startGame() {
       mapData.current = currentWaypoint;
       mapData.visited = visitedWaypoints;
     }
+    function afterEncounters() {
+      if (mapUI) mapUI.update();
+      checkGameOver();
+      if (wp.sites && wp.sites.length && harvest) {
+        harvest.showForWaypoint(wp);
+      }
+    }
+
 
     // Possibly trigger 0-2 random encounters (weighted)
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
@@ -161,17 +194,18 @@ function startGame() {
 
       const next = () => {
         if (!queue.length) {
-          checkGameOver();
+          afterEncounters();
           return;
         }
         const ev = queue.shift();
         runEncounter(world, player, ev, diary.add, next);
       };
       if (queue.length) next();
+      else afterEncounters();
+  }
+    else {
+      afterEncounters();
     }
-
-    if (mapUI) mapUI.update();
-    checkGameOver();
   }
 
   loadMap(world).then(map => {

@@ -3,7 +3,8 @@ export function createInventory() {
   container.style.position = 'absolute';
   container.style.right = '10px';
   container.style.bottom = '10px';
-  container.style.display = 'grid';
+  // Hidden by default; show() will switch display back to grid
+  container.style.display = 'none';
   container.style.gridTemplateColumns = 'repeat(6, 64px)';
   container.style.gridTemplateRows = 'repeat(4, 64px)';
   container.style.gap = '2px';
@@ -77,8 +78,24 @@ export function createInventory() {
   cells[0].appendChild(makeItem('#c0352b'));
   cells[1].appendChild(makeItem('#44a167'));
 
+  function show() {
+    container.style.display = 'grid';
+  }
+
+  function hide() {
+    container.style.display = 'none';
+  }
+
+  function toggle() {
+    if (container.style.display === 'none') show();
+    else hide();
+  }
+
   return {
     element: container,
+    show,
+    hide,
+    toggle,
     destroy() {
       container.remove();
     }
