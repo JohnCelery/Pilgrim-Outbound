@@ -4,7 +4,7 @@ import {
   nodeVisited as visitedUrl,
   marker as markerUrl,
   markerShadow as shadowUrl,
-  europeMap as worldMapUrl,
+  worldMap as worldMapUrl,
   mapVignette,
   iconMarket,
   iconMonastery,

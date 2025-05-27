@@ -253,8 +253,8 @@ function startGame(seedStr = '') {
       markerTween = { start: startPos, end: { x, y }, t: 0, dur: 500 };
     }
 
-    if (wp.name === 'Rome') {
-      alert('Victory! You reached Rome.');
+    if (wp.tags && wp.tags.includes('legend_marker')) {
+      alert('Victory! You reached the final landmark.');
       if (mapUI) mapUI.disable();
     }
 
