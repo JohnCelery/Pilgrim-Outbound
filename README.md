@@ -88,8 +88,10 @@ When finished, *Pilgrim Outbound* will be a pick-up-and-die-trying browser game:
 clickable, readable, no installs, but deep enough that veterans will chase perfect runs, dissect seed patterns, and swap campfire stories of the one caravan that almost made it home.
 
 ## Current Status
-- Travel restricted to neighboring nodes
-- Encounter events deduct supply costs
-- Reaching zero provisions triggers a provisional game over
-- Basic drag-and-drop inventory grid
+- Title screen boots to a parchment world map
+- Travel preview and confirmation overlays show supply costs and modifiers
+- Travel limited to adjacent nodes with random encounter events
+- Locality overlays support depth-based resource harvesting
+- Running out of food or water brings up a death screen
+- Drag-and-drop inventory grid for looting
 
