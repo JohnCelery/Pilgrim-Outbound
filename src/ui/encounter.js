@@ -2,11 +2,6 @@ import { PROVISIONS, WATER } from '../components.js';
 
 let panel;
 
-export function showEncounter(data) {
-  // TODO: remove once runEncounter fully replaces this.
-  console.log('Encounter:', data);
-}
-
 export function runEncounter(world, playerId, data, onComplete) {
   if (panel) panel.remove();
 
