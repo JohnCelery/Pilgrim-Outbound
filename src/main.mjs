@@ -7,7 +7,10 @@ import { createMapUI } from './ui/mapUI.js';
 import { runEncounter } from './ui/encounter.js';
 import { createDiary } from './ui/diary.js';
 import { createInventory } from './ui/inventory.js';
+// Keep both imports:
 import { createTitleScreen } from './ui/titleScreen.js';
+import { createResourceMenu } from './ui/resourceMenu.js';
+
 import {
   POSITION,
   PROVISIONS,
@@ -47,6 +50,7 @@ function startGame() {
   let hud = null;
   let eventsData = null;
   let inventory = null;
+  let resources = null;
   let gameOver = false;
 
   const player = world.createEntity();
@@ -59,8 +63,22 @@ function startGame() {
   addWood(world, player, 0);
   addFortune(world, player, 0);
   addFlags(world, player);
+
   hud = createHud(world, player);
   inventory = createInventory();
+  resources = createResourceMenu(world, player);
+  resources.update();
+
+  // A button to toggle the resource menu
+  const resBtn = document.createElement('button');
+  resBtn.textContent = 'Resources';
+  resBtn.style.position = 'absolute';
+  resBtn.style.left = '10px';
+  resBtn.style.top = '130px';
+  resBtn.style.zIndex = '6';
+  resBtn.addEventListener('click', () => resources.toggle());
+  document.body.appendChild(resBtn);
+
   const diary = createDiary();
 
   fetch('data/encounters.json')
@@ -117,9 +135,9 @@ function startGame() {
       mapData.visited = visitedWaypoints;
     }
 
-    // Possibly trigger 0-2 random encounters with weighted pick
+    // Possibly trigger 0-2 random encounters (weighted)
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
-      const draws = Math.floor(rng.nextFloat() * 3); // 0,1,2
+      const draws = Math.floor(rng.nextFloat() * 3); // 0, 1, or 2
       const queue = [];
       const available = eventsData.encounters.filter(e => {
         if (e.once && e._used) return false;
@@ -131,7 +149,10 @@ function startGame() {
         let pickedIndex = 0;
         for (let j = 0; j < available.length; j++) {
           roll -= available[j].weight || 1;
-          if (roll <= 0) { pickedIndex = j; break; }
+          if (roll <= 0) {
+            pickedIndex = j;
+            break;
+          }
         }
         const ev = available.splice(pickedIndex, 1)[0];
         ev._used = ev.once ? true : ev._used;
@@ -139,7 +160,10 @@ function startGame() {
       }
 
       const next = () => {
-        if (!queue.length) { checkGameOver(); return; }
+        if (!queue.length) {
+          checkGameOver();
+          return;
+        }
         const ev = queue.shift();
         runEncounter(world, player, ev, diary.add, next);
       };
@@ -157,7 +181,6 @@ function startGame() {
       const { x, y } = posRes.comps[0];
       const start = mapData.waypoints.find(w => w.coords[0] === x && w.coords[1] === y);
       if (start) {
-        // Mark the starting waypoint as visited
         start.visited = true;
         currentWaypoint = start.name;
         visitedWaypoints.add(start.name);
@@ -166,6 +189,7 @@ function startGame() {
       }
     }
     mapUI = createMapUI(canvas, mapData, world, player, travelTo);
+    // Initially disable, then enable once loaded or after title screen
     mapUI.disable();
     mapUI.update();
     mapUI.enable();
@@ -177,12 +201,14 @@ function startGame() {
     const pos = posRes ? posRes.comps[0] : null;
     drawMap(renderer.ctx, mapData, pos);
     hud.draw(renderer.ctx);
+    if (resources) resources.update();
   }
 
   loop.start();
 }
 
 function boot() {
+  // Show title screen and pass startGame as callback
   createTitleScreen(startGame);
 }
 
