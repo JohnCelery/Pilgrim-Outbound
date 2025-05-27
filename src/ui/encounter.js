@@ -96,7 +96,15 @@ export function runEncounter(world, playerId, data, diaryFn, onComplete) {
   const choices = document.createElement('div');
   choices.style.marginTop = '8px';
 
-  const opts = (data.options || []).slice(0, 3);
+  const flagRes = world.query(FLAGS).find(r => r.id === playerId);
+  const playerFlags = flagRes ? flagRes.comps[0] : {};
+
+  const opts = (data.options || [])
+    .filter(o => {
+      const req = o.outcome?.requiresFlag;
+      return !req || playerFlags[req];
+    })
+    .slice(0, 3);
 
   opts.forEach(choice => {
     const btn = document.createElement('button');
