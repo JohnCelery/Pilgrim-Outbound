@@ -68,6 +68,7 @@ function startGame() {
 
   hud = createHud(world, player);
   inventory = createInventory();
+  inventory.hide();
   resources = createResourceMenu(world, player);
   resources.update();
 
@@ -80,6 +81,16 @@ function startGame() {
   resBtn.style.zIndex = '6';
   resBtn.addEventListener('click', () => resources.toggle());
   document.body.appendChild(resBtn);
+
+  // Button to toggle the inventory
+  const invBtn = document.createElement('button');
+  invBtn.textContent = 'Inventory';
+  invBtn.style.position = 'absolute';
+  invBtn.style.left = '10px';
+  invBtn.style.top = '160px';
+  invBtn.style.zIndex = '6';
+  invBtn.addEventListener('click', () => inventory.toggle());
+  document.body.appendChild(invBtn);
 
   const diary = createDiary();
 
