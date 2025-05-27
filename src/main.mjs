@@ -44,6 +44,31 @@ function boot() {
 
   function travelTo(wp) {
     console.log('Traveling to', wp.name);
+
+    // Spend provisions and water according to travel costs
+    const costs = wp.travelCosts || { food: 0, water: 0 };
+
+    const provRes = world.query(PROVISIONS).find(r => r.id === player);
+    if (provRes) {
+      const prov = provRes.comps[0];
+      prov.amount = Math.max(0, prov.amount - (costs.food || 0));
+    }
+
+    const waterRes = world.query(WATER).find(r => r.id === player);
+    if (waterRes) {
+      const wat = waterRes.comps[0];
+      wat.amount = Math.max(0, wat.amount - (costs.water || 0));
+    }
+
+    // Update player position
+    const posRes = world.query(POSITION).find(r => r.id === player);
+    if (posRes) {
+      const pos = posRes.comps[0];
+      const [x, y] = wp.coords;
+      pos.x = x;
+      pos.y = y;
+    }
+
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
       const idx = Math.floor(rng.nextFloat() * eventsData.encounters.length);
       runEncounter(eventsData.encounters[idx]);
