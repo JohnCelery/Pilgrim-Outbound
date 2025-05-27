@@ -10,6 +10,7 @@ import { createInventory } from './ui/inventory.js';
 // Keep both imports:
 import { createTitleScreen } from './ui/titleScreen.js';
 import { createResourceMenu } from './ui/resourceMenu.js';
+import { createHarvestMenu } from './ui/harvestMenu.js';
 
 import {
   POSITION,
@@ -20,10 +21,13 @@ import {
   SILVER,
   WOOD,
   FORTUNE,
+  STAMINA,
   FLAGS,
   addPosition,
   addProvisions,
   addWater,
+  addHealth,
+  addStamina,
   addGear,
   addIron,
   addSilver,
@@ -51,6 +55,7 @@ function startGame() {
   let eventsData = null;
   let inventory = null;
   let resources = null;
+  let harvest = null;
   let gameOver = false;
 
   const player = world.createEntity();
@@ -71,6 +76,7 @@ function startGame() {
   inventory.hide();
   resources = createResourceMenu(world, player);
   resources.update();
+  harvest = createHarvestMenu(world, player);
 
   // A button to toggle the resource menu
   const resBtn = document.createElement('button');
@@ -114,6 +120,8 @@ function startGame() {
 
   function travelTo(wp) {
     console.log('Traveling to', wp.name);
+
+    if (harvest) harvest.hide();
 
     // Spend provisions and water according to travel costs
     const costs = wp.travelCosts || { food: 0, water: 0 };
@@ -179,6 +187,7 @@ function startGame() {
 
       const next = () => {
         if (!queue.length) {
+          if (harvest && wp.sites) harvest.show(wp.sites);
           checkGameOver();
           return;
         }
@@ -186,6 +195,7 @@ function startGame() {
         runEncounter(world, player, ev, diary.add, next);
       };
       if (queue.length) next();
+      else if (harvest && wp.sites) harvest.show(wp.sites);
     }
 
     if (mapUI) mapUI.update();
