@@ -78,12 +78,7 @@ export function runEncounter(world, playerId, data, diaryFn, inventory, state, o
     }
     if (outcome.diary && outcome.diaryFn) outcome.diaryFn(outcome.diary);
 
-    const flagRes2 = world.query(FLAGS).find(r => r.id === playerId);
-    const flagsNow = flagRes2 ? flagRes2.comps[0] : {};
     let fatal = false;
-    if (flagsNow.instant_death || (outcome.setFlags || []).includes('instant_death')) {
-      fatal = true;
-    }
     if (!fatal) {
       for (const type of Object.values(RES_MAP)) {
         const res = world.query(type).find(r => r.id === playerId);
