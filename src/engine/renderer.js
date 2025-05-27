@@ -18,12 +18,15 @@ const currentUrl = `${baseUrl}node_current.png`;
 const visitedUrl = `${baseUrl}node_visited.png`;
 const markerUrl = `${baseUrl}marker.png`;
 const shadowUrl = `${baseUrl}marker_shadow.png`;
+const worldMapUrl =
+  'https://cdn.glitch.global/d2170d50-99c2-4bff-b832-8d66b4d6e1f9/D217F327-6759-4EAC-9371-783E96C6D07B.png?v=1748360813466';
 
 let waypointImg;
 let currentImg;
 let visitedImg;
 let markerImg;
 let shadowImg;
+let worldMapImg;
 
 export function drawMap(ctx, map, playerPos = null) {
   if (!waypointImg) {
@@ -46,9 +49,18 @@ export function drawMap(ctx, map, playerPos = null) {
     shadowImg = new Image();
     shadowImg.src = shadowUrl;
   }
+  if (!worldMapImg) {
+    worldMapImg = new Image();
+    worldMapImg.src = worldMapUrl;
+  }
   if (!map) return;
 
   ctx.imageSmoothingEnabled = false;
+
+  // Draw the full world map as a backdrop once the image is loaded
+  if (worldMapImg.complete) {
+    ctx.drawImage(worldMapImg, 0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
 
   for (const wp of map.waypoints) {
     const [gx, gy] = wp.coords;
