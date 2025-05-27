@@ -85,6 +85,9 @@ function boot() {
       pos.y = y;
     }
 
+    // Mark waypoint as visited
+    wp.visited = true;
+
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
       const idx = Math.floor(rng.nextFloat() * eventsData.encounters.length);
       runEncounter(world, player, eventsData.encounters[idx], checkGameOver);
@@ -96,13 +99,21 @@ function boot() {
 
   loadMap(world).then(map => {
     mapData = map;
+    const posRes = world.query(POSITION).find(r => r.id === player);
+    if (posRes) {
+      const { x, y } = posRes.comps[0];
+      const start = mapData.waypoints.find(w => w.coords[0] === x && w.coords[1] === y);
+      if (start) start.visited = true;
+    }
     mapUI = createMapUI(canvas, mapData, world, player, travelTo);
     mapUI.update();
   });
 
   function step(_dt) {
     renderer.clear();
-    drawMap(renderer.ctx, mapData);
+    const posRes = world.query(POSITION).find(r => r.id === player);
+    const pos = posRes ? posRes.comps[0] : null;
+    drawMap(renderer.ctx, mapData, pos);
     hud.draw(renderer.ctx);
   }
 
