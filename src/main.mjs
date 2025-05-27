@@ -57,6 +57,8 @@ function startGame() {
   addPosition(world, player, 0, 0);
   addProvisions(world, player, 10);
   addWater(world, player, 10);
+  addHealth(world, player, 100);
+  addStamina(world, player, 100);
   addGear(world, player, 10);
   addIron(world, player, 0);
   addSilver(world, player, 0);
