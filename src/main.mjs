@@ -128,6 +128,11 @@ function startGame() {
       pos.y = y;
     }
 
+    if (wp.name === 'Rome') {
+      alert('Victory! You reached Rome.');
+      if (mapUI) mapUI.disable();
+    }
+
     // Mark waypoint as visited, then update current waypoint info
     wp.visited = true;
     currentWaypoint = wp.name;
