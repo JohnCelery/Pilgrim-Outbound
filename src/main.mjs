@@ -27,6 +27,8 @@ function boot() {
   const loop = createLoop(step);
 
   let mapData = null;
+  let currentWaypoint = null;
+  const visitedWaypoints = new Set();
   let mapUI = null;
   let hud = null;
   let eventsData = null;
@@ -85,6 +87,13 @@ function boot() {
       pos.y = y;
     }
 
+    currentWaypoint = wp.name;
+    visitedWaypoints.add(wp.name);
+    if (mapData) {
+      mapData.current = currentWaypoint;
+      mapData.visited = visitedWaypoints;
+    }
+
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
       const idx = Math.floor(rng.nextFloat() * eventsData.encounters.length);
       runEncounter(world, player, eventsData.encounters[idx], checkGameOver);
@@ -96,6 +105,17 @@ function boot() {
 
   loadMap(world).then(map => {
     mapData = map;
+    const posRes = world.query(POSITION).find(r => r.id === player);
+    if (posRes) {
+      const { x, y } = posRes.comps[0];
+      const start = mapData.waypoints.find(w => w.coords[0] === x && w.coords[1] === y);
+      if (start) {
+        currentWaypoint = start.name;
+        visitedWaypoints.add(start.name);
+        mapData.current = currentWaypoint;
+        mapData.visited = visitedWaypoints;
+      }
+    }
     mapUI = createMapUI(canvas, mapData, world, player, travelTo);
     mapUI.update();
   });
