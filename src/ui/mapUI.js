@@ -91,7 +91,8 @@ export function createMapUI(canvas, mapData, world, playerId, onSelect, costFn) 
     const { x, y } = posRes.comps[0];
     const current = mapData.waypoints.find(w => w.coords[0] === x && w.coords[1] === y);
     if (!current) return;
-    for (const name of current.neighbors || []) {
+    const neigh = (current.neighbors || []).slice(0, 2);
+    for (const name of neigh) {
       validNeighbors.add(name);
       const wp = mapData.waypoints.find(w => w.name === name);
       if (!wp) continue;

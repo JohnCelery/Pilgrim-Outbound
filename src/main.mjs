@@ -14,6 +14,36 @@ import { createResourceMenu } from './ui/resourceMenu.js';
 import { createHarvestMenu } from './ui/harvestMenu.js';
 import { createTravelConfirm } from './ui/travelConfirm.js';
 import { createDeathScreen } from './ui/deathScreen.js';
+import { createLocationMenu } from './ui/locationMenu.js';
+import {
+  heroMarket,
+  heroMonastery,
+  heroFarmland,
+  heroForest,
+  heroMountain,
+  heroRiver,
+  heroPort,
+  heroRuin,
+  heroBattlefield,
+  heroHiddenPath,
+  heroEncampment,
+  heroCathedral
+} from './assets.js';
+
+const HERO_MAP = {
+  heroMarket,
+  heroMonastery,
+  heroFarmland,
+  heroForest,
+  heroMountain,
+  heroRiver,
+  heroPort,
+  heroRuin,
+  heroBattlefield,
+  heroHiddenPath,
+  heroEncampment,
+  heroCathedral
+};
 
 import {
   POSITION,
@@ -95,6 +125,7 @@ function startGame(seedStr = '') {
   let resources = null;
   let harvest = null;
   let travelConfirm = null;
+  let locationMenu = null;
   let deathScreen = null;
   let markerTween = null;
   let gameOver = false;
@@ -141,6 +172,7 @@ function startGame(seedStr = '') {
 
   const diary = createDiary(state);
   harvest = createHarvestMenu(world, player, diary.add, inventory);
+  locationMenu = createLocationMenu(world, player, diary.add);
 
   fetch('data/encounters.json')
     .then(r => r.json())
@@ -226,65 +258,68 @@ function startGame(seedStr = '') {
       if (mapUI) mapUI.disable();
     }
 
-    // Mark waypoint as visited, then update current waypoint info
-    wp.visited = true;
-    currentWaypoint = wp.name;
-    visitedWaypoints.add(wp.name);
-    if (mapData) {
-      mapData.current = currentWaypoint;
-      mapData.visited = visitedWaypoints;
-    }
+    const finalizeArrival = () => {
+      // Mark waypoint as visited, then update current waypoint info
+      wp.visited = true;
+      currentWaypoint = wp.name;
+      visitedWaypoints.add(wp.name);
+      if (mapData) {
+        mapData.current = currentWaypoint;
+        mapData.visited = visitedWaypoints;
+      }
 
-    // Build encounter queue: forced combat flags first
-    const flagRes = world.query(FLAGS).find(r => r.id === player);
-    const flags = flagRes ? flagRes.comps[0] : {};
-    const queue = [];
-    if (flags.bandit_ambush) queue.push(COMBAT_EVENTS.bandit_ambush);
-    if (flags.blood_oath) queue.push(COMBAT_EVENTS.blood_oath);
+      const flagRes = world.query(FLAGS).find(r => r.id === player);
+      const flags = flagRes ? flagRes.comps[0] : {};
+      const queue = [];
+      if (flags.bandit_ambush) queue.push(COMBAT_EVENTS.bandit_ambush);
+      if (flags.blood_oath) queue.push(COMBAT_EVENTS.blood_oath);
 
-    // Then add 0-2 weighted random encounters
-    if (eventsData && eventsData.encounters && eventsData.encounters.length) {
-      const draws = Math.floor(rng.nextFloat() * 3); // 0, 1, or 2
-      const available = eventsData.encounters.filter(e => {
-        if (e.once && e._used) return false;
-        return true;
-      });
-      for (let i = 0; i < draws && available.length; i++) {
-        const total = available.reduce((s, ev) => s + (ev.weight || 1), 0);
-        let roll = rng.nextFloat() * total;
-        let pickedIndex = 0;
-        for (let j = 0; j < available.length; j++) {
-          roll -= available[j].weight || 1;
-          if (roll <= 0) {
-            pickedIndex = j;
-            break;
-          }
+      const showLocation = () => {
+        const afterLoc = () => {
+          if (harvest && wp.sites) harvest.show(wp.sites);
+          if (inventory) inventory.show();
+          if (mapUI) mapUI.update();
+          diary.add(`Day ${state.day} — Arrived at ${wp.name}.`);
+          checkGameOver();
+        };
+        if (locationMenu) locationMenu.show(wp.type, HERO_MAP, afterLoc);
+        else afterLoc();
+      };
+
+      const next = () => {
+        if (!queue.length) {
+          showLocation();
+          return;
         }
-        const ev = available.splice(pickedIndex, 1)[0];
-        ev._used = ev.once ? true : ev._used;
-        queue.push(ev);
-      }
-    }
+        const ev = queue.shift();
+        runEncounter(world, player, ev, diary.add, inventory, state, next);
+      };
 
-    const next = () => {
-      if (!queue.length) {
-        if (harvest && wp.sites) harvest.show(wp.sites);
-        if (inventory) inventory.show();
-        checkGameOver();
-        return;
-      }
-      const ev = queue.shift();
-      runEncounter(world, player, ev, diary.add, inventory, state, next);
+      if (queue.length) next();
+      else showLocation();
     };
-    if (queue.length) next();
-    else {
-      if (harvest && wp.sites) harvest.show(wp.sites);
-      if (inventory) inventory.show();
-    }
 
-    if (mapUI) mapUI.update();
-    diary.add(`Day ${state.day} — Arrived at ${wp.name}.`);
-    checkGameOver();
+    const travelEncounter = () => {
+      if (eventsData && eventsData.encounters && eventsData.encounters.length && rng.nextFloat() < 0.2) {
+        const available = eventsData.encounters.filter(e => !e.once || !e._used);
+        if (available.length) {
+          const total = available.reduce((s, ev) => s + (ev.weight || 1), 0);
+          let roll = rng.nextFloat() * total;
+          let pickedIndex = 0;
+          for (let j = 0; j < available.length; j++) {
+            roll -= available[j].weight || 1;
+            if (roll <= 0) { pickedIndex = j; break; }
+          }
+          const ev = available[pickedIndex];
+          ev._used = ev.once ? true : ev._used;
+          runEncounter(world, player, ev, diary.add, inventory, state, finalizeArrival);
+          return;
+        }
+      }
+      finalizeArrival();
+    };
+
+    travelEncounter();
   }
 
   function travelTo(wp) {
