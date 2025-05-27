@@ -27,6 +27,8 @@ function boot() {
   const loop = createLoop(step);
 
   let mapData = null;
+  let currentWaypoint = null;
+  const visitedWaypoints = new Set();
   let mapUI = null;
   let hud = null;
   let eventsData = null;
@@ -85,9 +87,16 @@ function boot() {
       pos.y = y;
     }
 
-    // Mark waypoint as visited
+    // Mark waypoint as visited, then update current waypoint info
     wp.visited = true;
+    currentWaypoint = wp.name;
+    visitedWaypoints.add(wp.name);
+    if (mapData) {
+      mapData.current = currentWaypoint;
+      mapData.visited = visitedWaypoints;
+    }
 
+    // Possibly trigger a random encounter
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
       const idx = Math.floor(rng.nextFloat() * eventsData.encounters.length);
       runEncounter(world, player, eventsData.encounters[idx], checkGameOver);
@@ -103,7 +112,14 @@ function boot() {
     if (posRes) {
       const { x, y } = posRes.comps[0];
       const start = mapData.waypoints.find(w => w.coords[0] === x && w.coords[1] === y);
-      if (start) start.visited = true;
+      if (start) {
+        // Mark the starting waypoint as visited
+        start.visited = true;
+        currentWaypoint = start.name;
+        visitedWaypoints.add(start.name);
+        mapData.current = currentWaypoint;
+        mapData.visited = visitedWaypoints;
+      }
     }
     mapUI = createMapUI(canvas, mapData, world, player, travelTo);
     mapUI.update();
@@ -121,3 +137,4 @@ function boot() {
 }
 
 window.addEventListener('DOMContentLoaded', boot);
+

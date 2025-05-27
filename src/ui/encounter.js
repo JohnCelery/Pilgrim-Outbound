@@ -1,11 +1,6 @@
-import { PROVISIONS, WATER } from '../components.js';
+import { PROVISIONS, WATER, HEALTH, STAMINA } from '../components.js';
 
 let panel;
-
-export function showEncounter(data) {
-  // TODO: remove once runEncounter fully replaces this.
-  console.log('Encounter:', data);
-}
 
 export function runEncounter(world, playerId, data, onComplete) {
   if (panel) panel.remove();
@@ -15,6 +10,8 @@ export function runEncounter(world, playerId, data, onComplete) {
       let type = null;
       if (key === 'food') type = PROVISIONS;
       else if (key === 'water') type = WATER;
+      else if (key === 'health') type = HEALTH;
+      else if (key === 'stamina') type = STAMINA;
       if (!type) continue;
       const res = world.query(type).find(r => r.id === playerId);
       if (res) {
