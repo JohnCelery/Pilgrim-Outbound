@@ -41,6 +41,36 @@ A successful journey lasts 30–60 minutes.  Most fail in 10–20.
 
 ---
 
+## Art-Asset Guidelines  (v0.1)
+These specs are “contract values” the code will assume.  
+Stick to them unless we explicitly change the baseline in a future PR.
+
+| Category | Canvas units | Native pixel size | Notes / Style |
+|----------|--------------|-------------------|---------------|
+| **Tiling backgrounds** | full screen | 1024 × 1024 | Seamless parchment or leather tiles. Warm tan #d8c79e base; subtle fiber noise. PNG or high-q WebP. |
+| **Map nodes** | 1 × 1 tile | 64 × 64 | Three sprites per node: `node_default.png`, `node_current.png`, `node_visited.png`. Transparent BG. |
+| **Courier marker** | ¾ tile | 48 × 48 | Horse-and-rider silhouette + separate 16 px oval shadow (`marker.png`, `marker_shadow.png`). |
+| **HUD dials** | 1½ tiles | 96 × 96 | Empty ring only—code will draw meter arc. Center glyphs: wheat = food, droplet = water. |
+| **Inventory grid cell** | 1 × 1 tile | 64 × 64 | Weathered-leather square with stitched border (`grid_cell.png`). Must tile seamlessly. |
+| **Inventory items** | various | multiples of 48 × 48 (inside 64 × 64 cells) | Keep outline, drop-shadow, and 4 px padding transparent. Example placeholders:<br>• `grain_sack_1x1.png` 48×48<br>• `waterskin_1x2.png` 48×96<br>• `toolkit_2x1.png` 96×48 |
+| **Event/modal frame** | n/a | 1280 × 400 | Illuminated manuscript border, transparent center (`modal_frame.png`). |
+| **Large illustrations** (future) | width-fit | ≤ 1280 × 720 | Used for cut-scenes / endings; keep file < 300 KB. |
+
+### Naming & Placement
+* Place all runtime images in `assets/images/`.
+* Use lowercase snake-case filenames; dimensions encoded only when needed (`itemname_2x1.png`).
+* The build remains atlas-agnostic for now; code loads each PNG by URL.
+
+### Colour & Finish
+* Palette: lapis blue (#2554a3), vermilion (#c0352b), verdigris (#44a167), ochre (#d7a13b), bone (#f9f3e1), and ebony (#232323).
+* Bold hand-inked outlines (≈2 px at 1× scale), flat fills, light paper grain overlay.
+* Export with premultiplied alpha OFF.
+
+> **Rule of thumb:** if an image won’t align to the 64 px grid or the sizes above,
+> decide whether it’s UI (stick to spec) or illustration (free to scale) and name accordingly.
+
+---
+
 ## Endgame Paths (When Complete)  
 1. **Azure – Pax Romana**: escort the relic to Rome and secure papal sanction.  
 2. **Vert – Seed of Yggdrasil**: ally with a Norse skald to plant a holy oak on pagan soil.  
