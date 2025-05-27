@@ -321,6 +321,323 @@
           }
         }
       ]
+    },
+    {
+      "id": "mirror_bittern_marsh",
+      "weight": 5,
+      "text": "On a moonless night the courier reaches a glass-still bog where vapour rises like columns. In the water floats a disc of polished bronze—unblemished, impossibly bright, clearly Roman workmanship yet humming with faint tonal overtones.",
+      "options": [
+        {
+          "option": "Cup some water and clean the mirror",
+          "outcome": {
+            "resources": {"water": -5, "fortune": 1},
+            "setFlags": ["star_visions"],
+            "diary": "The surface reveals a wrong star-map."
+          }
+        },
+        {
+          "option": "Pocket the bronze for trade",
+          "outcome": {
+            "resources": {"silver": 25},
+            "setFlags": ["marsh_curse"],
+            "diary": "You feel a damp chill cling to you."
+          }
+        },
+        {
+          "option": "Gaze at your reflection until dawn",
+          "outcome": {
+            "resources": {"food": -10},
+            "setFlags": ["coord_vert"],
+            "diary": "Dawn breaks with secrets of Vert."
+          }
+        }
+      ]
+    },
+    {
+      "id": "silent_choir_aachen",
+      "weight": 5,
+      "text": "Within a collapsed Carolingian chapel twelve stone effigies stand in a circle; hollow throats house bronze pipes. A silent boy lights taper-candles between them then gestures for you to blow into any statue.",
+      "options": [
+        {
+          "option": "Blow a short hymn",
+          "outcome": {
+            "resources": {"wood": 10},
+            "setFlags": ["word_gloria"],
+            "diary": "Echoes dislodge old choir stalls."
+          }
+        },
+        {
+          "option": "Improvise a Nordic war-chant",
+          "outcome": {
+            "random": {
+              "chance": 0.5,
+              "success": {"setFlags": ["nordic_friendly"], "resources": {"fortune": 1}},
+              "fail": {"resources": {"fortune": -1}}
+            },
+            "diary": "Your breath resounds among the statues."
+          }
+        },
+        {
+          "option": "Smash a pipe free for scrap",
+          "outcome": {
+            "resources": {"copper": 20, "gear": -15},
+            "setFlags": ["choir_haunted"],
+            "diary": "Stone collapses with a ghostly sigh."
+          }
+        }
+      ]
+    },
+    {
+      "id": "falconer_milepost",
+      "weight": 6,
+      "text": "A one-eyed falconer in Andalusi silks waits atop a shattered Roman milestone; his bird clutches a parchment tube. He offers to release the falcon toward any distant node but demands payment in secrets, not coin.",
+      "options": [
+        {
+          "option": "Confess your mission aloud",
+          "outcome": {
+            "resources": {"fortune": -1},
+            "setFlags": ["reveal_two_nodes"],
+            "diary": "The falcon soars with your confession."
+          }
+        },
+        {
+          "option": "Trade a relic scrap as a 'secret'",
+          "outcome": {
+            "setFlags": ["patrol_maps"],
+            "resources": {"food": 10},
+            "clearFlags": ["relic_scrap"],
+            "diary": "He rewards you with field provisions."
+          }
+        },
+        {
+          "option": "Lie, spinning a tall tale",
+          "outcome": {
+            "random": {
+              "chance": 0.5,
+              "success": {"resources": {"silver": 20}},
+              "fail": {"setFlags": ["falconer_spite"]}
+            },
+            "diary": "The falcon watches you intently."
+          }
+        }
+      ]
+    },
+    {
+      "id": "sky_vaulted_library",
+      "weight": 5,
+      "text": "In a limestone sinkhole, mirrored shards form a ceiling that projects starlight into subterranean alcoves filled with scroll tubes. The air smells of myrrh and ozone.",
+      "options": [
+        {
+          "option": "Browse celestial scrolls",
+          "outcome": {
+            "resources": {"water": -10},
+            "setFlags": ["recipe_star_lens"],
+            "diary": "Hours pass under shifting constellations."
+          }
+        },
+        {
+          "option": "Collect mirror shards",
+          "outcome": {
+            "resources": {"roman_tech_shard": 1},
+            "random": {
+              "chance": 0.25,
+              "fail": {"resources": {"gear": -20}}
+            },
+            "diary": "Sharp edges glitter in your pack."
+          }
+        },
+        {
+          "option": "Light a fire and scorch the place",
+          "outcome": {
+            "resources": {"wood": 15},
+            "setFlags": ["carolingian_favor"],
+            "diary": "Smoke curls as heresy burns."
+          }
+        }
+      ]
+    },
+    {
+      "id": "bridge_singing_chains",
+      "weight": 5,
+      "text": "An iron suspension bridge spans a gorge; when wind blows the hanging links emit organ-like chords in a minor key. A hermit scrapes inscriptions into the deck, claiming each note represents a prophecy.",
+      "options": [
+        {
+          "option": "Cross while humming along",
+          "outcome": {
+            "resources": {"gear": -10},
+            "setFlags": ["chain_resonance"],
+            "diary": "The vibrations settle into your bones."
+          }
+        },
+        {
+          "option": "Carve your own name into the deck",
+          "outcome": {
+            "resources": {"fortune": 1},
+            "setFlags": ["marked_by_prophecy"],
+            "diary": "Your name sings with the bridge."
+          }
+        },
+        {
+          "option": "Harvest a chain segment",
+          "outcome": {
+            "resources": {"iron": 25},
+            "setFlags": ["bridge_unstable"],
+            "diary": "Metal groans as you pry it loose."
+          }
+        }
+      ]
+    },
+    {
+      "id": "glyphs_tidal_bell",
+      "weight": 5,
+      "text": "At low tide a bronze bell the size of a hut lies on its side amid kelp; Nordic runes overlay Latin numerals. A gull-feather quill and inkpot sit on a driftwood altar inviting a new glyph.",
+      "options": [
+        {
+          "option": "Add a Carolingian cross",
+          "outcome": {
+            "setFlags": ["cross_over_rune"],
+            "diary": "Your mark angers the sea breeze."
+          }
+        },
+        {
+          "option": "Etch Odin's mark deeper",
+          "outcome": {
+            "resources": {"iron": 10},
+            "setFlags": ["odin_mark"]
+          }
+        },
+        {
+          "option": "Trace the hidden numerals for study",
+          "outcome": {
+            "resources": {"water": -5},
+            "setFlags": ["word_sifr"],
+            "diary": "You decipher intriguing decimals."
+          }
+        }
+      ]
+    },
+    {
+      "id": "clockwork_stag",
+      "weight": 6,
+      "text": "Deep forest hush: a metallic stag, joints ticking, grazes on fallen leaves. Its flank bears the sigil of the Architects.",
+      "options": [
+        {
+          "option": "Approach with calm and touch its nose",
+          "outcome": {
+            "random": {
+              "chance": 0.5,
+              "success": {"resources": {"food": 20}},
+              "fail": {}
+            },
+            "diary": "The stag's gears whirr softly."
+          }
+        },
+        {
+          "option": "Fire an arrow to bring it down",
+          "outcome": {
+            "requiresFlag": "bow",
+            "resources": {"roman_tech_shard": 1},
+            "setFlags": ["forest_spooked"],
+            "diary": "Metal parts scatter into the brush."
+          }
+        },
+        {
+          "option": "Shadow the stag for an hour",
+          "outcome": {
+            "resources": {"food": -5},
+            "setFlags": ["forest_shortcut"],
+            "diary": "It leads you to a hidden path."
+          }
+        }
+      ]
+    },
+    {
+      "id": "star_yew_orchard",
+      "weight": 5,
+      "text": "An orchard of yews cut into star shapes; sap glitters like gold dust. A blind woman tends them, insisting each tree remembers Rome.",
+      "options": [
+        {
+          "option": "Tap sap into vials",
+          "outcome": {
+            "resources": {"fortune": 1, "gear": -10},
+            "diary": "Sticky sap coats your hands."
+          }
+        },
+        {
+          "option": "Ask for guidance to distant shrine",
+          "outcome": {
+            "resources": {"food": -10},
+            "setFlags": ["coord_or"]
+          }
+        },
+        {
+          "option": "Offer to prune diseased limbs",
+          "outcome": {
+            "resources": {"wood": 20},
+            "setFlags": ["plague_blessing"],
+            "diary": "Her blessing wards off sickness."
+          }
+        }
+      ]
+    },
+    {
+      "id": "echo_chamber_twins",
+      "weight": 5,
+      "text": "Two perfectly spherical marble rooms share a thin slit. Your whispered words re-emerge a heartbeat later in another language. Graffiti lists Latin to Norse to Arabic chains.",
+      "options": [
+        {
+          "option": "Speak your true name",
+          "outcome": {
+            "setFlags": ["echo_bound", "word_random"],
+            "diary": "The chamber repeats you thrice over."
+          }
+        },
+        {
+          "option": "Shout a battle cry",
+          "outcome": {
+            "resources": {"gear_max_temp": 10, "water": -5},
+            "diary": "Your voice booms in alien tongues."
+          }
+        },
+        {
+          "option": "Chip marble for sale",
+          "outcome": {
+            "resources": {"silver": 20},
+            "setFlags": ["echo_chamber_ruined"],
+            "diary": "Fragments clatter at your feet."
+          }
+        }
+      ]
+    },
+    {
+      "id": "wraith_weather_vane",
+      "weight": 6,
+      "text": "On a ruined manor's roof a bronze rooster weather-vane rotates though the air is still; a translucent child stands beside it, pointing to the cardinal points. Lightning flickers though skies are clear.",
+      "options": [
+        {
+          "option": "Turn the vane to North as asked",
+          "outcome": {
+            "resources": {"fortune": 1},
+            "setFlags": ["north_wind_favor"],
+            "diary": "A calm hush follows the turning."
+          }
+        },
+        {
+          "option": "Ask the child what it seeks",
+          "outcome": {
+            "setFlags": ["coord_argent", "word_ventus"],
+            "diary": "The child fades with a whisper."
+          }
+        },
+        {
+          "option": "Climb up to steal the vane",
+          "outcome": {
+            "resources": {"copper": 25, "gear": -20},
+            "setFlags": ["ghost_vengeful"],
+            "diary": "You slip but keep hold of the vane."
+          }
+        }
+      ]
     }
   ]
 }
