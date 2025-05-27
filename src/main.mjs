@@ -10,6 +10,7 @@ import { createInventory } from './ui/inventory.js';
 // Keep both imports:
 import { createTitleScreen } from './ui/titleScreen.js';
 import { createResourceMenu } from './ui/resourceMenu.js';
+import { createHarvestMenu } from './ui/harvestMenu.js';
 
 import {
   POSITION,
@@ -20,6 +21,7 @@ import {
   SILVER,
   WOOD,
   FORTUNE,
+  STAMINA,
   FLAGS,
   addPosition,
   addProvisions,
@@ -29,6 +31,7 @@ import {
   addSilver,
   addWood,
   addFortune,
+  addStamina,
   addFlags
 } from './components.js';
 import { createHud } from './ui/hud.js';
@@ -51,6 +54,7 @@ function startGame() {
   let eventsData = null;
   let inventory = null;
   let resources = null;
+  let harvest = null;
   let gameOver = false;
 
   const player = world.createEntity();
@@ -62,11 +66,13 @@ function startGame() {
   addSilver(world, player, 0);
   addWood(world, player, 0);
   addFortune(world, player, 0);
+  addStamina(world, player, 100);
   addFlags(world, player);
 
   hud = createHud(world, player);
   inventory = createInventory();
   resources = createResourceMenu(world, player);
+  harvest = createHarvestMenu(world, player, () => resources.update());
   resources.update();
 
   // A button to toggle the resource menu
@@ -135,6 +141,14 @@ function startGame() {
       mapData.visited = visitedWaypoints;
     }
 
+    function afterEncounters() {
+      if (mapUI) mapUI.update();
+      checkGameOver();
+      if (wp.sites && wp.sites.length && harvest) {
+        harvest.showForWaypoint(wp);
+      }
+    }
+
     // Possibly trigger 0-2 random encounters (weighted)
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
       const draws = Math.floor(rng.nextFloat() * 3); // 0, 1, or 2
@@ -161,17 +175,17 @@ function startGame() {
 
       const next = () => {
         if (!queue.length) {
-          checkGameOver();
+          afterEncounters();
           return;
         }
         const ev = queue.shift();
         runEncounter(world, player, ev, diary.add, next);
       };
       if (queue.length) next();
+      else afterEncounters();
+    } else {
+      afterEncounters();
     }
-
-    if (mapUI) mapUI.update();
-    checkGameOver();
   }
 
   loadMap(world).then(map => {
