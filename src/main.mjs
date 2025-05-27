@@ -7,6 +7,7 @@ import { createMapUI } from './ui/mapUI.js';
 import { runEncounter } from './ui/encounter.js';
 import { createDiary } from './ui/diary.js';
 import { createInventory } from './ui/inventory.js';
+import { createResourceMenu } from './ui/resourceMenu.js';
 import {
   POSITION,
   PROVISIONS,
@@ -46,6 +47,7 @@ function boot() {
   let hud = null;
   let eventsData = null;
   let inventory = null;
+  let resources = null;
   let gameOver = false;
 
   const player = world.createEntity();
@@ -60,6 +62,16 @@ function boot() {
   addFlags(world, player);
   hud = createHud(world, player);
   inventory = createInventory();
+  resources = createResourceMenu(world, player);
+  resources.update();
+  const resBtn = document.createElement('button');
+  resBtn.textContent = 'Resources';
+  resBtn.style.position = 'absolute';
+  resBtn.style.left = '10px';
+  resBtn.style.top = '130px';
+  resBtn.style.zIndex = '6';
+  resBtn.addEventListener('click', () => resources.toggle());
+  document.body.appendChild(resBtn);
   const diary = createDiary();
 
   fetch('data/encounters.json')
@@ -174,6 +186,7 @@ function boot() {
     const pos = posRes ? posRes.comps[0] : null;
     drawMap(renderer.ctx, mapData, pos);
     hud.draw(renderer.ctx);
+    if (resources) resources.update();
   }
 
   loop.start();
