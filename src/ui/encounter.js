@@ -92,7 +92,9 @@ export function runEncounter(world, playerId, data, diaryFn, onComplete) {
   const choices = document.createElement('div');
   choices.style.marginTop = '8px';
 
-  (data.choices || []).slice(0, 3).forEach(choice => {
+  const opts = (data.options || []).slice(0, 3);
+
+  opts.forEach(choice => {
     const btn = document.createElement('button');
     btn.textContent = choice.option || choice;
     btn.style.marginRight = '6px';
@@ -104,6 +106,16 @@ export function runEncounter(world, playerId, data, diaryFn, onComplete) {
     });
     choices.appendChild(btn);
   });
+
+  if (opts.length === 0) {
+    const btn = document.createElement('button');
+    btn.textContent = 'Continue';
+    btn.addEventListener('click', () => {
+      panel.remove();
+      if (onComplete) onComplete();
+    });
+    choices.appendChild(btn);
+  }
 
   panel.appendChild(choices);
 
