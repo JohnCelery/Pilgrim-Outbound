@@ -10,13 +10,9 @@ import {
   POSITION,
   PROVISIONS,
   WATER,
-  HEALTH,
-  STAMINA,
   addPosition,
   addProvisions,
-  addWater,
-  addHealth,
-  addStamina
+  addWater
 } from './components.js';
 import { createHud } from './ui/hud.js';
 
@@ -43,8 +39,6 @@ function boot() {
   addPosition(world, player, 0, 0);
   addProvisions(world, player, 10);
   addWater(world, player, 10);
-  addHealth(world, player, 10);
-  addStamina(world, player, 10);
   hud = createHud(world, player);
   inventory = createInventory();
 
@@ -93,6 +87,8 @@ function boot() {
       pos.y = y;
     }
 
+    // Mark waypoint as visited, then update current waypoint info
+    wp.visited = true;
     currentWaypoint = wp.name;
     visitedWaypoints.add(wp.name);
     if (mapData) {
@@ -100,6 +96,7 @@ function boot() {
       mapData.visited = visitedWaypoints;
     }
 
+    // Possibly trigger a random encounter
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
       const idx = Math.floor(rng.nextFloat() * eventsData.encounters.length);
       runEncounter(world, player, eventsData.encounters[idx], checkGameOver);
@@ -116,6 +113,8 @@ function boot() {
       const { x, y } = posRes.comps[0];
       const start = mapData.waypoints.find(w => w.coords[0] === x && w.coords[1] === y);
       if (start) {
+        // Mark the starting waypoint as visited
+        start.visited = true;
         currentWaypoint = start.name;
         visitedWaypoints.add(start.name);
         mapData.current = currentWaypoint;
@@ -128,7 +127,9 @@ function boot() {
 
   function step(_dt) {
     renderer.clear();
-    drawMap(renderer.ctx, mapData);
+    const posRes = world.query(POSITION).find(r => r.id === player);
+    const pos = posRes ? posRes.comps[0] : null;
+    drawMap(renderer.ctx, mapData, pos);
     hud.draw(renderer.ctx);
   }
 
@@ -136,3 +137,4 @@ function boot() {
 }
 
 window.addEventListener('DOMContentLoaded', boot);
+

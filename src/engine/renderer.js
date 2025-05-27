@@ -10,20 +10,65 @@ export function createRenderer(canvas) {
   };
 }
 
-const waypointUrl =
-  'https://cdn.glitch.global/813b10b4-5e9c-4e7c-9356-9c7f504e5ff1/node_default.png';
-let waypointImg;
+const baseUrl =
+  'https://cdn.glitch.global/813b10b4-5e9c-4e7c-9356-9c7f504e5ff1/';
 
-export function drawMap(ctx, map) {
+const waypointUrl = `${baseUrl}node_default.png`;
+const currentUrl = `${baseUrl}node_current.png`;
+const visitedUrl = `${baseUrl}node_visited.png`;
+const markerUrl = `${baseUrl}marker.png`;
+const shadowUrl = `${baseUrl}marker_shadow.png`;
+
+let waypointImg;
+let currentImg;
+let visitedImg;
+let markerImg;
+let shadowImg;
+
+export function drawMap(ctx, map, playerPos = null) {
   if (!waypointImg) {
     waypointImg = new Image();
     waypointImg.src = waypointUrl;
   }
+  if (!currentImg) {
+    currentImg = new Image();
+    currentImg.src = currentUrl;
+  }
+  if (!visitedImg) {
+    visitedImg = new Image();
+    visitedImg.src = visitedUrl;
+  }
+  if (!markerImg) {
+    markerImg = new Image();
+    markerImg.src = markerUrl;
+  }
+  if (!shadowImg) {
+    shadowImg = new Image();
+    shadowImg.src = shadowUrl;
+  }
   if (!map) return;
+
+  ctx.imageSmoothingEnabled = false;
+
   for (const wp of map.waypoints) {
     const [gx, gy] = wp.coords;
     const x = ctx.canvas.width / 2 + gx * 64 - 32;
     const y = ctx.canvas.height / 2 + gy * 64 - 32;
-    ctx.drawImage(waypointImg, x, y, 64, 64);
+
+    let img = waypointImg;
+    if (playerPos && gx === playerPos.x && gy === playerPos.y) {
+      img = currentImg;
+    } else if (wp.visited) {
+      img = visitedImg;
+    }
+
+    ctx.drawImage(img, x, y, 64, 64);
+  }
+
+  if (playerPos) {
+    const baseX = ctx.canvas.width / 2 + playerPos.x * 64 - 32;
+    const baseY = ctx.canvas.height / 2 + playerPos.y * 64 - 32;
+    ctx.drawImage(shadowImg, baseX + 32 - 8, baseY + 48, 16, 16);
+    ctx.drawImage(markerImg, baseX + 8, baseY + 8, 48, 48);
   }
 }
