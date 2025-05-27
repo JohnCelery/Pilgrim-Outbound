@@ -1,10 +1,11 @@
 import { POSITION } from '../components.js';
+import { tooltipPanel } from '../assets.js';
 
 export function createMapUI(canvas, mapData, world, playerId, onSelect, costFn) {
   const overlay = document.createElement('div');
   overlay.style.position = 'absolute';
   overlay.style.pointerEvents = 'none';
-  overlay.style.background = 'rgba(216, 199, 158, 0.95)';
+  overlay.style.background = `url('${tooltipPanel}') no-repeat center/contain`;
   overlay.style.color = '#000';
   overlay.style.padding = '4px 6px';
   overlay.style.font = '12px sans-serif';

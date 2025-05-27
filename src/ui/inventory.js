@@ -1,8 +1,12 @@
+import { gridCell, grainSack, waterskin, toolkit, leatherTile } from '../assets.js';
+
 export function createInventory(starterItems = []) {
   const container = document.createElement('div');
   container.style.position = 'absolute';
   container.style.right = '10px';
   container.style.bottom = '10px';
+  container.style.backgroundImage = `url('${leatherTile}')`;
+  container.style.backgroundSize = '64px 64px';
   // Hidden by default; show() will switch display back to grid
   container.style.display = 'none';
   container.style.gridTemplateColumns = 'repeat(6, 64px)';
@@ -19,6 +23,8 @@ export function createInventory(starterItems = []) {
     cell.style.border = '1px solid #555';
     cell.style.boxSizing = 'border-box';
     cell.style.position = 'relative';
+    cell.style.backgroundImage = `url('${gridCell}')`;
+    cell.style.backgroundSize = 'cover';
     container.appendChild(cell);
     cells.push(cell);
   }
@@ -36,6 +42,8 @@ export function createInventory(starterItems = []) {
       cell.style.border = '1px solid #555';
       cell.style.boxSizing = 'border-box';
       cell.style.position = 'relative';
+      cell.style.backgroundImage = `url('${gridCell}')`;
+      cell.style.backgroundSize = 'cover';
       container.appendChild(cell);
       cells.push(cell);
       const rows = Math.ceil(cells.length / 6);
@@ -46,7 +54,12 @@ export function createInventory(starterItems = []) {
 
   function makeItemElement(item) {
     const img = new Image();
-    img.src = 'PASTE_URL_HERE';
+    const ITEM_MAP = {
+      grain_sack: grainSack,
+      waterskin: waterskin,
+      toolkit: toolkit
+    };
+    img.src = ITEM_MAP[item] || 'PASTE_URL_HERE';
     img.style.width = '48px';
     img.style.height = '48px';
     img.style.position = 'absolute';

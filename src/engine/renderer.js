@@ -1,3 +1,13 @@
+import {
+  nodeDefault as waypointUrl,
+  nodeCurrent as currentUrl,
+  nodeVisited as visitedUrl,
+  marker as markerUrl,
+  markerShadow as shadowUrl,
+  europeMap as worldMapUrl,
+  mapVignette
+} from '../assets.js';
+
 export function createRenderer(canvas) {
   const ctx = canvas.getContext('2d');
 
@@ -10,12 +20,6 @@ export function createRenderer(canvas) {
   };
 }
 
-const waypointUrl = 'PASTE_URL_HERE';
-const currentUrl = 'PASTE_URL_HERE';
-const visitedUrl = 'PASTE_URL_HERE';
-const markerUrl = 'PASTE_URL_HERE';
-const shadowUrl = 'PASTE_URL_HERE';
-const worldMapUrl = 'PASTE_URL_HERE';
 
 let waypointImg;
 let currentImg;
@@ -23,6 +27,7 @@ let visitedImg;
 let markerImg;
 let shadowImg;
 let worldMapImg;
+let vignetteImg;
 
 export function drawMap(ctx, map, playerPos = null, tween = null) {
   if (!waypointImg) {
@@ -48,6 +53,10 @@ export function drawMap(ctx, map, playerPos = null, tween = null) {
   if (!worldMapImg) {
     worldMapImg = new Image();
     worldMapImg.src = worldMapUrl;
+  }
+  if (!vignetteImg) {
+    vignetteImg = new Image();
+    vignetteImg.src = mapVignette;
   }
   if (!map) return;
 
@@ -86,17 +95,21 @@ export function drawMap(ctx, map, playerPos = null, tween = null) {
     ctx.drawImage(markerImg, baseX + 8, baseY + 8, 48, 48);
   }
 
-  // subtle radial vignette
-  const g = ctx.createRadialGradient(
-    ctx.canvas.width / 2,
-    ctx.canvas.height / 2,
-    0,
-    ctx.canvas.width / 2,
-    ctx.canvas.height / 2,
-    Math.max(ctx.canvas.width, ctx.canvas.height) / 2
-  );
-  g.addColorStop(0, 'rgba(0,0,0,0)');
-  g.addColorStop(1, 'rgba(0,0,0,0.4)');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  // subtle radial vignette or overlay texture
+  if (vignetteImg.complete) {
+    ctx.drawImage(vignetteImg, 0, 0, ctx.canvas.width, ctx.canvas.height);
+  } else {
+    const g = ctx.createRadialGradient(
+      ctx.canvas.width / 2,
+      ctx.canvas.height / 2,
+      0,
+      ctx.canvas.width / 2,
+      ctx.canvas.height / 2,
+      Math.max(ctx.canvas.width, ctx.canvas.height) / 2
+    );
+    g.addColorStop(0, 'rgba(0,0,0,0)');
+    g.addColorStop(1, 'rgba(0,0,0,0.4)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
 }

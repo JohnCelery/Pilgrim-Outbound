@@ -1,11 +1,10 @@
 import { PROVISIONS, WATER, GEAR, FORTUNE } from '../components.js';
+import { hudFoodRing as foodUrl, hudWaterRing as waterUrl } from '../assets.js';
 
 // Placeholder icons for stats not yet backed by real assets
 const healthIcon = '❤';
 const staminaIcon = '⚡';
 
-const foodUrl = 'PASTE_URL_HERE';
-const waterUrl = 'PASTE_URL_HERE';
 
 let foodImg;
 let waterImg;

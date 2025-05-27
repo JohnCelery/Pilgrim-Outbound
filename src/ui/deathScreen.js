@@ -1,3 +1,5 @@
+import { deathPanel } from '../assets.js';
+
 export function createDeathScreen(message = 'You have perished.', onRestart) {
   const overlay = document.createElement('div');
   overlay.style.position = 'absolute';
@@ -5,7 +7,7 @@ export function createDeathScreen(message = 'You have perished.', onRestart) {
   overlay.style.top = '0';
   overlay.style.width = '100%';
   overlay.style.height = '100%';
-  overlay.style.background = "rgba(0,0,0,0.8) url('PASTE_URL_HERE') center/cover no-repeat";
+  overlay.style.background = `rgba(0,0,0,0.8) url('${deathPanel}') center/cover no-repeat`;
   overlay.style.display = 'flex';
   overlay.style.flexDirection = 'column';
   overlay.style.justifyContent = 'center';

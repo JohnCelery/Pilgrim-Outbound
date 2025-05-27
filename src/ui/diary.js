@@ -1,3 +1,5 @@
+import { diaryPanel } from '../assets.js';
+
 export function createDiary(state = null) {
   const panel = document.createElement('div');
   panel.id = 'diary';
@@ -6,7 +8,7 @@ export function createDiary(state = null) {
   panel.style.top = '0';
   panel.style.width = '250px';
   panel.style.height = '100%';
-  panel.style.backgroundImage = "url('PASTE_URL_HERE')";
+  panel.style.backgroundImage = `url('${diaryPanel}')`;
   panel.style.backgroundSize = 'cover';
   panel.style.transform = 'translateX(100%)';
   panel.style.transition = 'transform 0.3s ease-out';

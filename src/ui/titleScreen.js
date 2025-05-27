@@ -1,3 +1,5 @@
+import { parchmentTile, tooltipPanel, btnPlank, titleGraphic } from '../assets.js';
+
 export function createTitleScreen(onRide) {
   const overlay = document.createElement('div');
   overlay.style.position = 'absolute';
@@ -5,7 +7,7 @@ export function createTitleScreen(onRide) {
   overlay.style.top = '0';
   overlay.style.width = '100%';
   overlay.style.height = '100%';
-  overlay.style.backgroundImage = "url('PASTE_URL_HERE')";
+  overlay.style.backgroundImage = `url('${parchmentTile}')`;
   overlay.style.backgroundSize = 'cover';
   overlay.style.display = 'flex';
   overlay.style.flexDirection = 'column';
@@ -16,12 +18,13 @@ export function createTitleScreen(onRide) {
   overlay.style.transition = 'opacity 0.5s';
 
   const titleImg = new Image();
-  titleImg.src = 'PASTE_URL_HERE';
+  titleImg.src = titleGraphic;
   titleImg.style.marginBottom = '16px';
   overlay.appendChild(titleImg);
 
   const beginBtn = document.createElement('button');
   beginBtn.textContent = 'Begin Journey';
+  beginBtn.style.backgroundImage = `url('${btnPlank}')`;
   beginBtn.style.transition = 'filter 0.2s';
   beginBtn.addEventListener('mouseover', () => {
     beginBtn.style.filter = 'brightness(1.2)';
@@ -35,7 +38,7 @@ export function createTitleScreen(onRide) {
   seedPanel.style.left = '50%';
   seedPanel.style.top = '50%';
   seedPanel.style.transform = 'translate(-50%, -50%)';
-  seedPanel.style.backgroundImage = "url('PASTE_URL_HERE')";
+  seedPanel.style.backgroundImage = `url('${tooltipPanel}')`;
   seedPanel.style.backgroundSize = 'cover';
   seedPanel.style.padding = '16px';
   seedPanel.style.display = 'none';
@@ -48,6 +51,7 @@ export function createTitleScreen(onRide) {
 
   const rideBtn = document.createElement('button');
   rideBtn.textContent = 'Ride';
+  rideBtn.style.backgroundImage = `url('${btnPlank}')`;
   rideBtn.addEventListener('click', () => {
     const seed = seedInput.value.trim();
     overlay.style.opacity = '0';

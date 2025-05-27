@@ -7,6 +7,7 @@ import {
   STAMINA,
   FORTUNE
 } from '../components.js';
+import { grainFieldTile, forestWoodTile, riverFishTile, oreVeinTile } from '../assets.js';
 
 export function createHarvestMenu(world, playerId, diaryFn = null, inventory = null) {
   const panel = document.createElement('div');
@@ -48,19 +49,19 @@ export function createHarvestMenu(world, playerId, diaryFn = null, inventory = n
 
   const SITE_DATA = {
     farm: {
-      icon: 'PASTE_URL_HERE',
+      icon: grainFieldTile,
       loot: [{ type: 'food', amount: 5 }]
     },
     forest: {
-      icon: 'PASTE_URL_HERE',
+      icon: forestWoodTile,
       loot: [{ type: 'wood', amount: 5 }]
     },
     river: {
-      icon: 'PASTE_URL_HERE',
+      icon: riverFishTile,
       loot: [{ type: 'water', amount: 5 }]
     },
     mine: {
-      icon: 'PASTE_URL_HERE',
+      icon: oreVeinTile,
       loot: [{ type: 'iron', amount: 3 }]
     }
   };

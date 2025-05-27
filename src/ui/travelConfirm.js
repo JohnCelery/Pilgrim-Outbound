@@ -1,9 +1,11 @@
+import { scorePanel } from '../assets.js';
+
 export function createTravelConfirm() {
   const panel = document.createElement('div');
   panel.style.position = 'absolute';
   panel.style.right = '10px';
   panel.style.bottom = '10px';
-  panel.style.background = "url('PASTE_URL_HERE') no-repeat center/contain";
+  panel.style.background = `url('${scorePanel}') no-repeat center/contain`;
   panel.style.color = '#fff';
   panel.style.padding = '8px';
   panel.style.border = '2px solid #d7a13b';
