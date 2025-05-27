@@ -1,4 +1,6 @@
-export function createMapUI(canvas, mapData, onTravel) {
+import { POSITION } from '../components.js';
+
+export function createMapUI(canvas, mapData, world, playerId, onTravel) {
   const overlay = document.createElement('div');
   overlay.style.position = 'absolute';
   overlay.style.pointerEvents = 'none';
@@ -10,7 +12,48 @@ export function createMapUI(canvas, mapData, onTravel) {
   overlay.style.display = 'none';
   document.body.appendChild(overlay);
 
+  const highlightLayer = document.createElement('div');
+  highlightLayer.style.position = 'absolute';
+  highlightLayer.style.pointerEvents = 'none';
+  highlightLayer.style.left = '0';
+  highlightLayer.style.top = '0';
+  highlightLayer.style.width = '100%';
+  highlightLayer.style.height = '100%';
+  highlightLayer.style.zIndex = '5';
+  document.body.appendChild(highlightLayer);
+
+  let validNeighbors = new Set();
+  let enabled = true;
+
   let hovered = null;
+
+  function updateHighlights() {
+    highlightLayer.innerHTML = '';
+    validNeighbors = new Set();
+    const posRes = world.query(POSITION).find(r => r.id === playerId);
+    if (!posRes) return;
+    const { x, y } = posRes.comps[0];
+    const current = mapData.waypoints.find(w => w.coords[0] === x && w.coords[1] === y);
+    if (!current) return;
+    for (const name of current.neighbors || []) {
+      validNeighbors.add(name);
+      const wp = mapData.waypoints.find(w => w.name === name);
+      if (!wp) continue;
+      const rect = canvas.getBoundingClientRect();
+      const [gx, gy] = wp.coords;
+      const px = rect.left + canvas.width / 2 + gx * 64 - 32;
+      const py = rect.top + canvas.height / 2 + gy * 64 - 32;
+      const div = document.createElement('div');
+      div.style.position = 'absolute';
+      div.style.left = `${px}px`;
+      div.style.top = `${py}px`;
+      div.style.width = '64px';
+      div.style.height = '64px';
+      div.style.border = '2px solid #d7a13b';
+      div.style.borderRadius = '50%';
+      highlightLayer.appendChild(div);
+    }
+  }
 
   function waypointAt(x, y) {
     if (!mapData) return null;
@@ -26,6 +69,7 @@ export function createMapUI(canvas, mapData, onTravel) {
   }
 
   function onMove(ev) {
+    if (!enabled) return;
     const rect = canvas.getBoundingClientRect();
     const x = ev.clientX - rect.left;
     const y = ev.clientY - rect.top;
@@ -43,7 +87,8 @@ export function createMapUI(canvas, mapData, onTravel) {
   }
 
   function onClick() {
-    if (hovered && onTravel) {
+    if (!enabled) return;
+    if (hovered && onTravel && validNeighbors.has(hovered.name)) {
       overlay.style.display = 'none';
       onTravel(hovered);
     }
@@ -57,10 +102,13 @@ export function createMapUI(canvas, mapData, onTravel) {
   canvas.addEventListener('click', onClick);
 
   return {
+    update: updateHighlights,
+    disable() { enabled = false; highlightLayer.innerHTML = ''; overlay.style.display = 'none'; },
     destroy() {
       canvas.removeEventListener('mousemove', onMove);
       canvas.removeEventListener('click', onClick);
       overlay.remove();
+      highlightLayer.remove();
     }
   };
 }

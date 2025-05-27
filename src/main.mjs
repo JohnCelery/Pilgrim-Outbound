@@ -5,6 +5,7 @@ import { createRenderer, drawMap } from './engine/renderer.js';
 import { loadMap } from './engine/mapLoader.js';
 import { createMapUI } from './ui/mapUI.js';
 import { runEncounter } from './ui/encounter.js';
+import { createInventory } from './ui/inventory.js';
 import {
   POSITION,
   PROVISIONS,
@@ -29,18 +30,33 @@ function boot() {
   let mapUI = null;
   let hud = null;
   let eventsData = null;
+  let inventory = null;
+  let gameOver = false;
 
   const player = world.createEntity();
   addPosition(world, player, 0, 0);
   addProvisions(world, player, 10);
   addWater(world, player, 10);
   hud = createHud(world, player);
+  inventory = createInventory();
 
   fetch('data/events.json')
     .then(r => r.json())
     .then(json => {
       eventsData = json;
     });
+
+  function checkGameOver() {
+    const provRes = world.query(PROVISIONS).find(r => r.id === player);
+    const waterRes = world.query(WATER).find(r => r.id === player);
+    const prov = provRes ? provRes.comps[0].amount : 0;
+    const wat = waterRes ? waterRes.comps[0].amount : 0;
+    if ((prov <= 0 || wat <= 0) && !gameOver) {
+      gameOver = true;
+      alert('You have collapsed from exhaustion. Game over.');
+      if (mapUI) mapUI.disable();
+    }
+  }
 
   function travelTo(wp) {
     console.log('Traveling to', wp.name);
@@ -71,13 +87,17 @@ function boot() {
 
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
       const idx = Math.floor(rng.nextFloat() * eventsData.encounters.length);
-      runEncounter(eventsData.encounters[idx]);
+      runEncounter(world, player, eventsData.encounters[idx], checkGameOver);
     }
+
+    if (mapUI) mapUI.update();
+    checkGameOver();
   }
 
   loadMap(world).then(map => {
     mapData = map;
-    mapUI = createMapUI(canvas, mapData, travelTo);
+    mapUI = createMapUI(canvas, mapData, world, player, travelTo);
+    mapUI.update();
   });
 
   function step(_dt) {
