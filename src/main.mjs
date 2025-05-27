@@ -37,6 +37,37 @@ import {
 } from './components.js';
 import { createHud } from './ui/hud.js';
 
+const COMBAT_EVENTS = {
+  bandit_ambush: {
+    title: 'Bandit Ambush',
+    text: 'Bandits spring from the brush with crude blades.',
+    options: [
+      {
+        option: 'Fight them off',
+        outcome: { diary: 'You scatter the bandits.', clearFlags: ['bandit_ambush'] }
+      },
+      {
+        option: 'Flee and drop supplies',
+        outcome: { resources: { food: -5 }, diary: 'You escape but lose rations.', clearFlags: ['bandit_ambush'] }
+      }
+    ]
+  },
+  blood_oath: {
+    title: 'Blood Oath',
+    text: 'The oath upon you demands combat.',
+    options: [
+      {
+        option: 'Accept the duel',
+        outcome: { resources: { stamina: -10 }, diary: 'You honor the oath in battle.', clearFlags: ['blood_oath'] }
+      },
+      {
+        option: 'Break the oath',
+        outcome: { setFlags: ['oath_broken'], diary: 'Shame burns as you turn away.', clearFlags: ['blood_oath'] }
+      }
+    ]
+  }
+};
+
 function startGame() {
   const canvas = document.getElementById('game');
   canvas.width = 800;
@@ -161,10 +192,16 @@ function startGame() {
       mapData.visited = visitedWaypoints;
     }
 
-    // Possibly trigger 0-2 random encounters (weighted)
+    // Build encounter queue: forced combat flags first
+    const flagRes = world.query(FLAGS).find(r => r.id === player);
+    const flags = flagRes ? flagRes.comps[0] : {};
+    const queue = [];
+    if (flags.bandit_ambush) queue.push(COMBAT_EVENTS.bandit_ambush);
+    if (flags.blood_oath) queue.push(COMBAT_EVENTS.blood_oath);
+
+    // Then add 0-2 weighted random encounters
     if (eventsData && eventsData.encounters && eventsData.encounters.length) {
       const draws = Math.floor(rng.nextFloat() * 3); // 0, 1, or 2
-      const queue = [];
       const available = eventsData.encounters.filter(e => {
         if (e.once && e._used) return false;
         return true;
@@ -184,18 +221,22 @@ function startGame() {
         ev._used = ev.once ? true : ev._used;
         queue.push(ev);
       }
+    }
 
-      const next = () => {
-        if (!queue.length) {
-          if (harvest && wp.sites) harvest.show(wp.sites);
-          checkGameOver();
-          return;
-        }
-        const ev = queue.shift();
-        runEncounter(world, player, ev, diary.add, next);
-      };
-      if (queue.length) next();
-      else if (harvest && wp.sites) harvest.show(wp.sites);
+    const next = () => {
+      if (!queue.length) {
+        if (harvest && wp.sites) harvest.show(wp.sites);
+        if (inventory) inventory.show();
+        checkGameOver();
+        return;
+      }
+      const ev = queue.shift();
+      runEncounter(world, player, ev, diary.add, next);
+    };
+    if (queue.length) next();
+    else {
+      if (harvest && wp.sites) harvest.show(wp.sites);
+      if (inventory) inventory.show();
     }
 
     if (mapUI) mapUI.update();
